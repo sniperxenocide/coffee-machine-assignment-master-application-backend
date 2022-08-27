@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${add}?'Create Contract':'Edit Contract'"></title>
+    <link rel="stylesheet" type="text/css" href="/css/all.css"/>
+    <script type="text/javascript" src="/js/common.js" async></script>
+    <script type="text/javascript" src="/js/contract.js" async></script>
+    <script type="text/javascript" src="/js/nav.js" async></script>
+</head>
+<body onload="init()">
+<div class="container">
+    <div class="row" id="header_container"></div>
+    <div class="row"><label></label></div>
+    <div class="row">
+        <div class="col-25"></div>
+        <div class="col-50" >
+            <div style="text-align: center;">
+                <h2 id="page-header" th:text="${add} ? 'Add New Contract' : 'Edit Contract'"></h2>
+            </div>
+        </div>
+<!--        <div class="col-20">-->
+<!--            <form th:unless="${add}" th:action="'/contract/delete?id='+${contract.id}"-->
+<!--                  method="post">-->
+<!--                <button type="button" style="background-color: crimson" onclick="modalAction()" >-->
+<!--                    <b>Delete Contract</b>-->
+<!--                </button>-->
+<!--                <div id="modal"  class="modal">-->
+<!--                    <div class="modal-content" style="width: 50%">-->
+<!--                        <div class="container">-->
+<!--                            <div class="row"><span class="close">&times;</span></div>-->
+<!--                            <div class="row" style="text-align: center;">-->
+<!--                                <h2>Do you want to Delete this Contract?</h2></div>-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-45"></div>-->
+<!--                                <div class="col-10">-->
+<!--                                    <button type="submit" style="background-color: crimson" >-->
+<!--                                        <b>YES</b>-->
+<!--                                    </button>-->
+<!--                                </div>-->
+<!--                                <div class="col-45"></div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </form>-->
+<!--        </div>-->
+        <div class="col-5"></div>
+    </div>
+    <!-- Check if errorMessage is not null and not empty -->
+    <div th:if="${errorMessage}" th:utext="${errorMessage}" class="errm_span"></div>
+    <div class="row">
+        <div class="col-45">
+            <div class="row" style="text-align: center;"><label><b>Shop</b></label></div>
+            <label></label>
+            <div  class="row">
+                <div style="max-height:500px;overflow-y: auto">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th><th>Code</th><th>Type</th><th>Grade</th><th>Proprietor Name</th>
+                                <th>Proprietor Phone</th><th>Address</th>
+                                <th>Division</th><th>Region</th><th>Territory</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            <tr th:if="${shop}" >
+                                <td th:text="${shop.shopName}"></td>
+                                <td th:text="${shop.shopCode}"></td><td th:text="${shop.shopType.name}"></td>
+                                <td th:text="${shop.shopGrade.name}"></td><td th:text="${shop.proprietorName}"></td>
+                                <td th:text="${shop.proprietorPhone}"></td>
+                                <td th:text="${shop.address}"></td><td th:text="${shop.division}"></td>
+                                <td th:text="${shop.region}"></td><td th:text="${shop.territory}"></td>
+                            </tr>
+                            <tr th:unless="${shop}"><td>Select Shop</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-5"></div>
+        <div class="col-45">
+            <div class="row" th:if="${add}">
+                <div class="col-5"></div>
+                <div class="col-20"><label><b>Machine</b></label></div>
+                <div class="col-10"><label>CVM</label></div>
+                <div class="col-20">
+                    <input type="text" id="machine-search-box" onkeydown="allowOnlyIntegerInput(event)"
+                           onchange="loadMachine(this.value)" placeholder="Code ex:001">
+                    <script th:inline="javascript">
+                        function loadMachine(val){
+                            location.replace(location.origin+'/contract/'+
+                                ([[${add}]]?'add?shopId='+[[${shop.id}]]:'edit?id='+[[${contract.id}]])+
+                                '&machineId='+parseInt(val));
+                        }
+                    </script>
+                </div>
+                <div class="col-5"></div>
+                <div class="col-15"><label>Available</label></div>
+                <div class="col-20">
+                    <select onchange="machineSearchBoxSet(this.value)">
+                        <option value="">-SELECT-</option>
+                        <option th:each="m : ${availableMachines}" th:value="${m.id}"
+                                th:text="${m.machineCode}+' ('+${m.machineBrand.name}+')'"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" th:unless="${add}" >
+                <div class="col-40"></div>
+                <div class="col-20"><label><b>Machine</b></label></div>
+                <div class="col-40"></div>
+            </div>
+            <label></label>
+            <div class="row">
+                <div style="max-height:500px;overflow-y: auto">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Machine Number</th><th>Code</th><th>Origin</th><th>Brand</th><th>Chamber</th>
+                                <th>Supplier Name</th><th>Supplier Oracle Code</th>
+                                <th>Validity</th><th>PO Price</th><th>Landed Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            <tr th:if="${machine}">
+                                <td th:text="${machine.machineNumber}"></td><td th:text="${machine.machineCode}"></td>
+                                <td th:text="${machine.originCountry.name}"></td><td th:text="${machine.machineBrand.name}"></td>
+                                <td th:text="${machine.chamberOption.name}"></td><td th:text="${machine.supplierName}"></td>
+                                <td th:text="${machine.supplierOracleCode}"></td><td th:text="${machine.machineReceivingDate}"></td>
+                                <td th:text="${machine.machinePoPrice}"></td><td th:text="${machine.machineLandedCost}"></td>
+                            </tr>
+                            <tr th:unless="${machine}"><td>Select Machine</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div th:if="${add} and ${machine}">
+                <label th:if="${machine.machineNumber.isEmpty()}" style="color: red">
+                    Machine Serial Number is Missing.Please add the Machine Number below.</label>
+                <div class="row">
+                    <div class="col-50">
+                        <label><b>Overwrite Machine Number</b></label>
+                        <input id="machine-number-update-txt" type="text"
+                               onchange="appendMachineNumberWithCreate(this.value)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row"><label></label></div>
+    <div class="row">
+        <form th:action="${add} ? '/contract/create' : '/contract/update'"
+              th:object="${contract}" method="post" id="contract-form">
+
+            <select th:if="${shop}" th:field="*{shop}" required style="display: none">
+                <option th:value="${shop.id}" ></option>
+            </select>
+            <select th:if="${machine}" th:field="*{machine}" required style="display: none">
+                <option th:value="${machine.id}" ></option>
+            </select>
+            <input type="number" th:if="${contract.id}" th:field="*{id}" th:value="${contract.id}" style="display: none">
+            <div class="row">
+                <div class="col-20">
+                    <label> <b>Payment Term</b><span style="color:red">*</span></label>
+                    <select th:field="*{paymentTerm}" required onchange="onPaymentTermChange(this.options[selectedIndex].value)">
+                        <option th:each="pt : ${payment_terms}" th:value="${pt.id}" th:text="${pt.name}"></option>
+                    </select>
+                </div>
+                <div class="col-5"><label></label></div>
+                <div class="col-20">
+                    <label> <b>Daily Target Volume (KG)</b><span style="color:red">*</span></label>
+                    <input type="number" th:field="*{dailyTargetVolumeKg}" >
+                </div>
+                <div class="col-5"><label></label></div>
+                <div class="col-20">
+                    <label> <b>Handover Date</b><span style="color:red">*</span></label>
+                    <input type="date" th:field="*{handoverDate}" required>
+                </div>
+                <div class="col-5"><label></label></div>
+                <div class="col-20">
+                    <label> <b>Machine Allotment Price</b><span style="color:red">*</span></label>
+                    <input type="number" th:field="*{machineAllotmentPrice}" required
+                     oninput="onChangeAllotmentPrice(this.value)">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-20">
+                    <label> <b>Installment Type</b><span style="color:red">*</span></label>
+                    <select th:field="*{installmentType}" required>
+                        <option th:each="it : ${installment_types}" th:value="${it.id}" th:text="${it.name}"></option>
+                    </select>
+                </div>
+                <div class="col-5"><label></label></div>
+                <div class="col-20">
+                    <label> <b>Number of Installment</b><span style="color:red">*</span></label>
+                    <input type="number" th:field="*{numberOfInstallment}"  required
+                    oninput="onChangeNumberOfInstallment(this)">
+                </div>
+                <div class="col-5"><label></label></div>
+                <div class="col-20">
+                    <label> <b>Per Installment Amount</b><span style="color:red">*</span></label>
+                    <input type="number" th:field="*{perInstallmentAmount}"  required>
+                </div>
+                <div class="col-5"><label></label></div>
+                <div class="col-20">
+                    <label> <b>Down Payment</b><span style="color:red">*</span></label>
+                    <input type="number"  th:field="*{downPayment}" required
+                    oninput="onChangeDownPayment(this)">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-20">
+                    <label> <b>Service Warranty Months</b></label>
+                    <select th:field="*{serviceWarrantyMonth}" >
+                        <option value="">-SELECT-</option>
+                        <option value="12">12</option>
+                        <option value="18">18</option>
+                        <option value="24">24</option>
+                        <option value="30">30</option>
+                        <option value="36">36</option>
+                        <option value="48">48</option>
+                        <option value="60">60</option>
+                    </select>
+                </div>
+                <div class="col-5"><label></label></div>
+                <div class="col-20">
+                    <label> <b>Security Money (Returnable)</b></label>
+                    <input type="number" th:field="*{securityMoney}" >
+                </div>
+                <div class="col-5"><label></label></div>
+                <div class="col-20">
+                    <label> <b>Security Money Return</b></label>
+                    <input type="date" th:field="*{securityMoneyReturnDate}">
+                </div>
+                <div class="col-5"><label></label></div>
+                <div class="col-20">
+                    <label> <b>Installment Start Date</b></label>
+                    <input type="date" th:field="*{installmentStartDate}">
+                </div>
+            </div>
+            <div class="row"><label></label></div>
+            <div class="row">
+                <div class="col-40"></div>
+                <div class="col-20">
+                    <button type="submit" th:text="${add} ? 'Create' : 'Update'"
+                            th:value="${add} ? 'Create' : 'Update'" ></button>
+                </div>
+
+                <div class="col-40"></div>
+            </div>
+        </form>
+        <br/>
+
+    </div>
+
+    <div class="row"><label></label></div>
+    <div class="row" id="footer_container"></div>
+</div>
+
+</body>
+</html>
+

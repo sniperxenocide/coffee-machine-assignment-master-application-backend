@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+</head>
+<body>
+    <div class="container">
+        <div style="text-align: center;"><h2>Machine Summary Report</h2></div>
+        <div class="row"><label></label></div>
+        <div class="row">
+            <div style="max-height:500px;overflow-y: auto">
+<!--               class="sheetjs" -->
+                <table  id="report-table-machine-summary" class='styled-table'>
+                    <thead>
+                    <tr>
+                        <th>SL</th><th>Brand</th><th>Country</th><th>Chamber Option</th>
+                        <th>Total Machine</th><th>Total Assigned</th><th>Total Unassigned</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${summaryList.isEmpty()}" >Nothing Found</tr>
+                        <tr th:each="line,stat:${summaryList}">
+                            <td th:text="${stat.index+1}"></td>
+                            <td th:text="${line.brand}"
+                                th:style="${line.brand} eq 'TOTAL'?'font-weight: bold;text-align: center':''"></td>
+                            <td th:text="${line.country}"></td>
+                            <td th:text="${line.chamberOption}"></td>
+                            <td th:text="${line.total}"></td>
+                            <td th:text="${line.totalAssigned}"></td>
+                            <td th:text="${line.totalUnassigned}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+</body>
+</html>

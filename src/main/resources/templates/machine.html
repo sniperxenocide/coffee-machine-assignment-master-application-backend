@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Machine</title>
+    <link rel="stylesheet" type="text/css" href="/css/all.css"/>
+    <script type="text/javascript" src="/js/common.js" async></script>
+    <script type="text/javascript" src="/js/machine.js" async></script>
+    <script type="text/javascript" src="/js/nav.js" async></script>
+</head>
+<body onload="init()">
+    <div class="container">
+        <div class="row" id="header_container"></div>
+        <div class="row"><label></label></div>
+        <div class="row">
+            <div class="col-15"><label></label>
+                <button onclick="location.replace('/machine/add')">Add Machine</button></div>
+            <div class="col-45"></div>
+            <div class="col-15">
+                <label><b>Search By Number</b></label>
+                <input type="text" onkeydown="allowOnlyIntegerInput(event)"
+                       onchange="location.replace(location.origin+'/machine?machineNumber='+parseInt(this.value))"
+                       placeholder="Machine Serial Number">
+            </div>
+            <div class="col-5"></div>
+            <div class="col-15">
+                <label><b>Search By Code</b></label>
+                <input type="text" onkeydown="allowOnlyIntegerInput(event)"
+                       onchange="location.replace(location.origin+'/machine?id='+parseInt(this.value))"
+                       placeholder="Type Machine Code ex:005">
+            </div>
+        </div>
+        <div th:if="${page}" class="row">
+            <label></label><label>First Page:</label>
+            <a th:href="@{/machine(page=1)}">1</a> <label></label>
+            <a th:if="${page} gt 1" th:href="@{/machine(page=${page}-1)}">Prev</a> &nbsp;
+            <label>Current Page:</label><b th:text="${page}"></b> &nbsp;
+            <a th:if="${page} lt ${lastPage}" th:href="@{/machine(page=${page}+1)}">Next</a>  &nbsp;
+            <label>Last Page:</label>
+            <a th:href="@{/machine(page=${lastPage})}" th:text="${lastPage}"></a>
+            <label></label>
+            <label th:text="'Showing '+(${machines.size}*${page - 1} + 1) +'-'+${machines.size}*${page}+' of '+${totalMachineCount}"></label>
+        </div>
+        <div class="row">
+            <div style="max-height:500px;overflow-y: auto">
+                <table class="styled-table">
+                    <thead>
+                    <tr>
+                        <th>SL</th><th>Edit Machine</th><th>Shop</th>
+                        <th>Machine Number</th><th>Machine Code</th>
+                        <th>Origin</th><th>Brand</th><th>Chamber</th>
+                        <th>Supplier Name</th><th>Supplier Oracle Code</th>
+                        <th>Receiving Date</th><th>Warranty (Month)</th>
+                        <th>PO Price</th><th>Landed Cost</th>
+                        <th>PO Number</th><th>LC Number</th>
+                        <th>Lot Number</th><th>Model</th><th>Oracle Item Code</th>
+                        <th>Created By</th><th>Creation Time</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${machines.isEmpty()}"><td colspan="5">No Data Found</td></tr>
+                    <tr th:each="machine,stat : ${machines}">
+                        <td th:if="${page}" th:text="${machines.size}*${page - 1}+${stat.index+1}"></td>
+                        <td th:unless="${page}" th:text="${stat.index+1}"></td>
+                        <td ><a th:href="@{/machine/edit(id=${machine.id})}">Edit</a></td>
+                        <td>
+                            <a th:if="${machine.contract}"
+                               th:href="@{/shop(code=${machine.contract.shop.shopCode})}"
+                               th:text="${machine.contract.shop.shopCode}">
+                            </a>
+                        </td>
+                        <td th:text="${machine.machineNumber}"></td>
+                        <td th:text="${machine.machineCode}"></td>
+                        <td th:text="${machine.originCountry.name}"></td>
+                        <td th:text="${machine.machineBrand.name}"></td>
+                        <td th:text="${machine.chamberOption.name}"></td>
+                        <td th:text="${machine.supplierName}"></td>
+                        <td th:text="${machine.supplierOracleCode}"></td>
+                        <td th:text="${machine.machineReceivingDate}"></td>
+                        <td th:text="${machine.warrantyPeriodMonth}"></td>
+                        <td th:text="${machine.machinePoPrice}"></td>
+                        <td th:text="${machine.machineLandedCost}"></td>
+                        <td th:text="${machine.poNumber}"></td>
+                        <td th:text="${machine.lcNumber}"></td>
+                        <td th:text="${machine.lotNumber}"></td>
+                        <td th:text="${machine.modelNumber}"></td>
+                        <td th:text="${machine.oracleItemCode}"></td>
+                        <td th:text="${machine.createdBy.username}"></td>
+                        <td th:text="${machine.creationTime}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div th:if="${page}" class="row">
+            <label></label><label>First Page:</label>
+            <a th:href="@{/machine(page=1)}">1</a> <label></label>
+            <a th:if="${page} gt 1" th:href="@{/machine(page=${page}-1)}">Prev</a> &nbsp;
+            <label>Current Page:</label><b th:text="${page}"></b> &nbsp;
+            <a th:if="${page} lt ${lastPage}" th:href="@{/machine(page=${page}+1)}">Next</a>  &nbsp;
+            <label>Last Page:</label>
+            <a th:href="@{/machine(page=${lastPage})}" th:text="${lastPage}"></a>
+            <label></label>
+            <label th:text="'Showing '+(${machines.size}*${page - 1} + 1) +'-'+${machines.size}*${page}+' of '+${totalMachineCount}"></label>
+        </div>
+
+        <div class="row"><label></label></div>
+        <div class="row" id="footer_container"></div>
+    </div>
+</body>
+</html>

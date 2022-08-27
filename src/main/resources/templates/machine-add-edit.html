@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${add}?'Create Machine':'Edit Machine'"></title>
+    <link rel="stylesheet" type="text/css" href="/css/all.css"/>
+    <script type="text/javascript" src="/js/common.js" async></script>
+    <script type="text/javascript" src="/js/machine.js" async></script>
+    <script type="text/javascript" src="/js/nav.js" async></script>
+</head>
+<body onload="init()">
+    <div class="container">
+        <div class="row" id="header_container"></div>
+        <div class="row"><label></label></div>
+        <div style="text-align: center;"><h2 th:text="${add} ? 'Add New Machine' : 'Edit Machine'"></h2></div>
+        <div class="row" >
+            <form th:action="${add} ? '/machine/create?cnt=1' : '/machine/update'"
+                  th:object="${machine}" method="post" id="machine-add-edit-form">
+                <div class="row">
+                    <input type="number" th:if="${machine.id}" th:field="*{id}" style="display: none">
+                    <div class="col-30">
+                        <label> <b>Machine Number</b></label>
+                        <input type="text" th:field="*{machineNumber}" th:readonly="${add}">
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>Machine Code (Read-Only)</b></label>
+                        <input type="text" readonly th:field="*{machineCode}" >
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>Receiving Date</b><span style="color:red">*</span></label>
+                        <input type="date" th:field="*{machineReceivingDate}" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-30">
+                        <label> <b>Origin Country</b><span style="color:red">*</span></label>
+                        <select th:field="*{originCountry}">
+                            <option th:each="og : ${origins}" th:value="${og.id}" th:text="${og.name}"></option>
+                        </select>
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>Machine Brand</b><span style="color:red">*</span></label>
+                        <select th:field="*{machineBrand}">
+                            <option th:each="mb : ${brands}" th:value="${mb.id}" th:text="${mb.name}"></option>
+                        </select>
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>Chamber Option</b><span style="color:red">*</span></label>
+                        <select th:field="*{chamberOption}">
+                            <option th:each="op : ${options}" th:value="${op.id}" th:text="${op.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-30">
+                        <label> <b>Machine PO Price</b><span style="color:red">*</span></label>
+                        <input type="number" th:field="*{machinePoPrice}" required>
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>Machine Landed Cost</b><span style="color:red">*</span></label>
+                        <input type="number" th:field="*{machineLandedCost}"  required>
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>Supplier Oracle Code</b><span style="color:red">*</span></label>
+                        <input type="text" onkeydown="allowOnlyIntegerInput(event)" onchange="getSupplierNameFromCode(this)"
+                               th:field="*{supplierOracleCode}" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-20">
+                        <label> <b>Warranty (Month)</b></label>
+                        <input type="text" onkeydown="allowOnlyIntegerInput(event)"
+                               th:field="*{warrantyPeriodMonth}" >
+                    </div>
+                    <div class="col-2-5"><label></label></div>
+                    <div class="col-20">
+                        <label> <b>PO Number</b></label>
+                        <input type="text" th:field="*{poNumber}" >
+                    </div>
+                    <div class="col-2-5"><label></label></div>
+                    <div class="col-20">
+                        <label> <b>LC Number</b></label>
+                        <input type="text" th:field="*{lcNumber}" >
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>Supplier Name (Read-Only)</b><span style="color:red">*</span></label>
+                        <input id="supplier_name" type="text" th:field="*{supplierName}" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-20">
+                        <label> <b>Lot Number</b></label>
+                        <input type="text" th:field="*{lotNumber}" >
+                    </div>
+                    <div class="col-2-5"><label></label></div>
+                    <div class="col-20">
+                        <label> <b>Model Number</b></label>
+                        <input type="text" th:field="*{modelNumber}" >
+                    </div>
+                    <div class="col-2-5"><label></label></div>
+                    <div class="col-20">
+                        <label> <b>Oracle Item Code</b></label>
+                        <input type="text" th:field="*{oracleItemCode}" >
+                    </div>
+                </div>
+                <div class="row"><label></label></div>
+                <div class="row">
+                    <div class="col-15"></div>
+                    <div class="col-20">
+                        <div class="row" th:if="${add}">
+                            <div class="col-75"><label> <b>Number of Machine (MAX:600)</b></label></div>
+                            <div class="col-25">
+                                <input type="text" onkeydown="allowOnlyIntegerInput(event)"
+                                       oninput="formParamUpdate(this)" value="1" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-5"></div>
+                    <div class="col-20">
+                        <button type="submit" th:text="${add} ? 'Create' : 'Update'"
+                                th:value="${add} ? 'Create' : 'Update'" ></button>
+                    </div>
+                    <div class="col-40"></div>
+                </div>
+            </form>
+            <br/>
+            <!-- Check if errorMessage is not null and not empty -->
+            <div th:if="${errorMessage}" th:utext="${errorMessage}" class="errm_span"></div>
+        </div>
+
+        <div class="row"><label></label></div>
+        <div class="row" id="footer_container"></div>
+    </div>
+
+</body>
+</html>

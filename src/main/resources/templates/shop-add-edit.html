@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${add}?'Create Shop':'Edit Shop'"></title>
+    <link rel="stylesheet" type="text/css" href="/css/all.css"/>
+    <link rel="stylesheet" href="/css/fstdropdown.css"/>
+    <script type="text/javascript" src="/js/common.js" async></script>
+    <script type="text/javascript" src="/js/shop.js" async></script>
+    <script type="text/javascript" src="/js/nav.js" async></script>
+    <script src="/js/lib/fstdropdown.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+    <div class="row" id="header_container"></div>
+    <div class="row"><label></label></div>
+    <div style="text-align: center;"><h2 th:text="${add} ? 'Add New Shop' : 'Edit Shop'"></h2></div>
+    <div class="row">
+        <form th:action="${add} ? '/shop/create' : '/shop/update'"
+              th:object="${shop}" method="post">
+            <div class="border_container" style="background-color: #c7d9d3">
+                <h2>Shop Info</h2>
+                <div class="row">
+                    <input type="number" th:if="${shop.id}" th:field="*{id}" style="display: none">
+                    <div class="col-30">
+                        <label> <b>Shop Name</b><span style="color:red">*</span></label>
+                        <input type="text" th:field="*{shopName}" required>
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>Shop Code (MIS)</b><span style="color:red">*</span></label>
+                        <input type="text" th:field="*{shopCode}" required >
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>Shop Category</b><span style="color:red">*</span></label>
+                        <select th:field="*{shopType}"  required
+                                onchange="onShopCategoryChange(this.options[selectedIndex].text)">
+                            <option th:each="st : ${types}" th:value="${st.id}" th:text="${st.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-30">
+                        <label> <b>Proprietor Name</b><span style="color:red">*</span></label>
+                        <input type="text" th:field="*{proprietorName}"  required>
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>Proprietor Phone</b><span style="color:red">*</span></label>
+                        <input type="text" onkeydown="allowOnlyIntegerInput(event)" th:field="*{proprietorPhone}"  required>
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>Proprietor NID</b></label>
+                        <input type="text" onkeydown="allowOnlyIntegerInput(event)" th:field="*{proprietorNid}" >
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-30">
+                        <label> <b>Shop Grade</b><span style="color:red">*</span></label>
+                        <select th:field="*{shopGrade}" required>
+                            <option th:each="gd : ${grades}" th:value="${gd.id}" th:text="${gd.name}"></option>
+                        </select>
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>Shop Address</b><span style="color:red">*</span></label>
+                        <input type="text" th:field="*{address}" required>
+                    </div>
+                </div>
+                <label></label>
+            </div>
+            <label></label>
+            <div class="border_container" style="background-color: #c7d9d3">
+                <h2>Machine Service Officer (MSO)</h2>
+                <div class="row">
+                    <div class="col-50">
+                        <select th:field="*{mso}"  class='fstdropdown-select'>
+                            <option value="">-SELECT-</option>
+                            <option th:each="mso : ${msoList}" th:value="${mso.id}"
+                                    th:text="${mso.division}+'-'+${mso.region}+'-'+${mso.territory}+' '+${mso.phone}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-5"><label></label></div>
+                </div>
+                <label></label>
+            </div>
+            <label></label>
+            <div class="border_container" style="background-color: #c7d9d3">
+                <h2>Location Info</h2>
+                <div class="row">
+                    <div class="col-30">
+                        <label> <b>Distributor Code</b><span style="color:red">*</span></label>
+                        <input type="text" onkeydown="allowOnlyIntegerInput(event)" onchange="getDistributorNameFromCode(this)"
+                               th:field="*{distributorOracleCode}" required>
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>Distributor Name(Read Only)</b><span style="color:red">*</span></label>
+                        <input type="text" th:field="*{distributorName}" readonly required>
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>TSO Name</b><span style="color:red">*</span></label>
+                        <input type="text" th:field="*{tsoName}" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-30">
+                        <label> <b>Division(Read Only)</b><span style="color:red">*</span></label>
+                        <input type="text" th:field="*{division}" required readonly>
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>Region(Read Only)</b><span style="color:red">*</span></label>
+                        <input type="text" th:field="*{region}" required readonly>
+                    </div>
+                    <div class="col-5"><label></label></div>
+                    <div class="col-30">
+                        <label> <b>TSO Phone</b><span style="color:red">*</span></label>
+                        <input type="text" onkeydown="allowOnlyIntegerInput(event)" th:field="*{tsoPhone}" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-30">
+                        <label> <b>Territory(Read Only)</b><span style="color:red">*</span></label>
+                        <input type="text" th:field="*{territory}" required readonly>
+                    </div>
+                    <div class="col-5"><label></label></div>
+                </div>
+                <label></label>
+            </div>
+
+
+            <div class="row"><label></label></div>
+            <div class="row">
+                <div class="col-40"></div>
+                <div class="col-20">
+                    <button type="submit" th:text="${add} ? 'Create' : 'Update'"
+                            th:value="${add} ? 'Create' : 'Update'" ></button>
+                </div>
+                <div class="col-40"></div>
+            </div>
+        </form>
+        <br/>
+        <!-- Check if errorMessage is not null and not empty -->
+        <div th:if="${errorMessage}" th:utext="${errorMessage}" class="errm_span"></div>
+    </div>
+
+    <div class="row"><label></label></div>
+    <div class="row" id="footer_container"></div>
+</div>
+
+</body>
+</html>

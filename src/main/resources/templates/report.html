@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+    <link rel="stylesheet" type="text/css" href="/css/all.css"/>
+    <script type="text/javascript" src="/js/common.js" async></script>
+    <script type="text/javascript" src="/js/report.js" async></script>
+    <script type="text/javascript" src="/js/nav.js" async></script>
+    <script type="text/javascript" src="/js/lib/FileSaver.js" async></script>
+    <script type="text/javascript" src="/js/lib/sheetjs.js" async></script>
+
+    <link rel="stylesheet" href="/css/jquery.sheetjs.css"/>
+    <script src="/js/lib/jquery.min.js" ></script>
+    <script src="/js/lib/jquery.sheetjs.js" ></script>
+
+</head>
+<body onload="init()">
+    <div class="container">
+        <div class="row" id="header_container"></div>
+        <div class="row"><label></label></div>
+        <div class="row">
+            <div style="max-height:500px;overflow-y: auto">
+                <table class="styled-table">
+                    <thead>
+                        <tr><th>SL</th><th>Name</th><th>View</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th>1</th><th>Machine Summary Report</th>
+                            <th><button onclick="openReportModal(1)">View</button></th></tr>
+                        <tr><th>2</th><th>Location Wise Vending Machine BIZ Scope Status</th>
+                            <th><button onclick="openReportModal(2)">View</button></th></tr>
+                        <tr><th>3</th><th>Type wise Vending Machine BIZ Scope Status</th>
+                            <th><button onclick="openReportModal(3)">View</button></th></tr>
+                        <tr><th>4</th><th>Division Region Territory wise Shop Detail</th>
+                            <th><button onclick="openReportModal(4)">View</button></th></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="modal"  class="modal">
+            <div class="modal-content" style="width: 80%">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-20">
+                            <button onclick="downloadReport()">Download</button>
+                        </div>
+                        <span class="close">&times;</span>
+                    </div>
+                    <div id="report-modal-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row"><label></label></div>
+        <div class="row" id="footer_container"></div>
+    </div>
+</body>
+</html>

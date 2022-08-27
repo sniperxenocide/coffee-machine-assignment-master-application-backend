@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+</head>
+<body>
+<div class="container">
+    <div style="text-align: center;"><h2>Division Region Territory wise Shop Detail</h2></div>
+    <div class="row"><label></label></div>
+    <div class="row">
+        <div class="col-45">
+            <label><b>Select Territory</b></label>
+            <select onchange="selectedTerritory=this.value">
+                <option value="">-SELECT-</option>
+                <option value="-">ALL</option>
+                <option th:each="mk :${marketHierarchy}" th:value="${mk.territory}"
+                        th:text="${mk.division+'-'+mk.region+'-'+mk.territory}"></option>
+            </select>
+        </div>
+        <div class="col-5"><label></label></div>
+        <div class="col-15">
+            <label></label>
+            <button onclick="openReportModal(4)">Apply</button>
+        </div>
+    </div>
+    <label></label>
+    <div class="row">
+        <div style="max-height:500px;overflow-y: auto">
+            <table  id="report-table-location-wise-shop-detail" class='styled-table'>
+                <thead>
+                <tr>
+                    <th>SL</th><th>Division</th><th>Region</th><th>Territory</th>
+                    <th>Distributor Name</th><th>Distributor Code</th><th>Shop Type</th>
+                    <th>Shop Name</th><th>Shop Code</th><th>Address</th>
+                    <th>Proprietor Name</th><th>Proprietor Phone</th><th>MSO Name</th><th>MSO Phone</th>
+                    <th>Machine SL</th><th>Machine Number</th><th>Machine Brand</th>
+                    <th>Installation Date</th><th>Security Money</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${shopList.isEmpty()}" >Nothing Found. Apply Filter</tr>
+                <th:block th:each="shop,stat:${shopList}">
+                    <th:block th:each="con,stat1:${shop.contracts}">
+                        <tr >
+                            <th:block th:if="${stat1.index eq 0}">
+                                <td th:text="${stat.index+1}" ></td>
+                                <td th:text="${shop.division}" ></td>
+                                <td th:text="${shop.region}" ></td>
+                                <td th:text="${shop.territory}" ></td>
+                                <td th:text="${shop.distributorName}" ></td>
+                                <td th:text="${shop.distributorOracleCode}" ></td>
+                                <td th:text="${shop.shopType.name}" ></td>
+                                <td th:text="${shop.shopName}" ></td>
+                                <td th:text="${shop.shopCode}" ></td>
+                                <td th:text="${shop.address}" ></td>
+                                <td th:text="${shop.proprietorName}" ></td>
+                                <td th:text="${shop.proprietorPhone}" ></td>
+
+                                <th:block th:if="${shop.mso}">
+                                    <td th:if="${shop.mso.name}" th:text="${shop.mso.name}" ></td>
+                                    <td th:unless="${shop.mso.name}" th:text="" ></td>
+                                    <td th:text="${shop.mso.phone}" ></td>
+                                </th:block>
+                                <th:block th:unless="${shop.mso}">
+                                    <td></td><td></td>
+                                </th:block>
+
+                            </th:block>
+                            <th:block th:unless="${stat1.index eq 0 }">
+                                <td th:each="i: ${#numbers.sequence(1, 14)}"></td>
+                            </th:block>
+                            <td th:text="${stat1.index+1}" ></td>
+                            <td th:text="${con.machine.machineNumber}"></td>
+                            <td th:text="${con.machine.machineBrand.name}"></td>
+                            <td th:text="${con.handoverDate}"></td>
+                            <td th:text="${con.securityMoney}"></td>
+                        </tr>
+                    </th:block>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

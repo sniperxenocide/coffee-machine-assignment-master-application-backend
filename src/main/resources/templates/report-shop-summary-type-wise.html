@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+</head>
+<body>
+<div class="container">
+    <div style="text-align: center;"><h2>Type Wise Vending Machine BIZ Scope Status</h2></div>
+    <div class="row"><label></label></div>
+    <div class="row">
+        <div style="max-height:500px;overflow-y: auto">
+            <!--               class="sheetjs" -->
+            <table  id="report-table-type-wise-shop" class='styled-table'>
+                <thead>
+                <tr>
+                    <th>SL</th><th>Shop Type</th>
+                    <th>Total Shop</th>
+                    <th title="Number of Shops Where Coffee Machine Assigned">Assigned Shop</th>
+                    <th title="Number of Coffee Machine Assigned">Assigned Machines</th>
+                    <th title="Number of Shops Where Coffee Machine Not Assigned Yet">Unassigned Shop</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${summaryList.isEmpty()}" >Nothing Found</tr>
+                <tr th:each="line,stat:${summaryList}">
+                    <td th:text="${stat.index+1}"></td>
+                    <td th:text="${line.shopType}"
+                        th:style="${line.shopType} eq 'TOTAL'?'font-weight: bold;text-align: center':''"></td>
+                    <td th:text="${line.totalShop}"></td>
+                    <td th:text="${line.totalShop}-${line.totalUnassignedShop}"></td>
+                    <td th:text="${line.totalMachine}"></td>
+                    <td th:text="${line.totalUnassignedShop}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

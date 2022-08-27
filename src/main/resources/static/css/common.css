@@ -1,0 +1,201 @@
+@charset "ISO-8859-1";
+ /* Style inputs, select elements and textareas */
+input[type=text],input[type=password],input[type=number],input[type=date], select,textarea{
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  resize: vertical;
+  background-color: #E5ECEC;
+}
+
+
+/* Style the label to display next to the inputs */
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+.color-label{
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+  color: green;
+  font-weight: bold;
+}
+
+button {
+  /*background-color: #34A6A8;*/
+  background-color:#646396;
+  color: white;
+  font-weight: bold;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+  width: 100%;
+}
+
+.select-button{
+  background-color: white;
+  color: black;
+  font-weight: normal;
+  padding: 12px;
+}
+
+button:hover{
+	background-color: #f5b83d;
+}
+
+
+/* Style the container */
+.container {
+  border-radius: 5px;
+  background-color: #C9D8D8;
+  padding: 20px;
+}
+
+.border_container {
+  border-radius: 5px;
+  background-color: #e4e5f5;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  border-style: solid;
+  border-width: 1px;
+  border-color: #4E6161;
+}
+
+.errm_span{
+	color: red;
+	font-weight: bold;
+    text-align: center;
+}
+
+/* Floating column for labels: 25% width */
+
+.col-2-5 {
+  float: left;
+  width: 2.5%;
+  margin-top: 6px;
+}
+
+.col-5 {
+  float: left;
+  width: 5%;
+  margin-top: 6px;
+}
+
+.col-6 {
+  float: left;
+  width: 6%;
+  margin-top: 6px;
+}
+
+.col-10 {
+  float: left;
+  width: 10%;
+  margin-top: 6px;
+}
+
+.col-15 {
+  float: left;
+  width: 15%;
+  margin-top: 6px;
+}
+
+.col-18 {
+  float: left;
+  width: 18%;
+  margin-top: 6px;
+}
+
+.col-20 {
+  float: left;
+  width: 20%;
+  margin-top: 6px;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-30 {
+  float: left;
+  width: 30%;
+  margin-top: 6px;
+}
+
+.col-35 {
+  float: left;
+  width: 35%;
+  margin-top: 6px;
+}
+
+.col-40 {
+  float: left;
+  width: 40%;
+  margin-top: 6px;
+}
+
+.col-45 {
+  float: left;
+  width: 45%;
+  margin-top: 6px;
+}
+
+/* Floating column for labels: 50% width */
+.col-50 {
+  float: left;
+  width: 50%;
+  margin-top: 6px;
+}
+
+.col-55 {
+  float: left;
+  width: 55%;
+  margin-top: 6px;
+}
+
+.col-60 {
+  float: left;
+  width: 60%;
+  margin-top: 6px;
+}
+
+/* Floating column for inputs: 75% width */
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+.col-80 {
+  float: left;
+  width: 80%;
+  margin-top: 6px;
+}
+
+.col-100 {
+  float: left;
+  width: 100%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+} 

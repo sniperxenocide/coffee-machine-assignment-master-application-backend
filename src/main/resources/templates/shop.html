@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Shop</title>
+    <link rel="stylesheet" type="text/css" href="/css/all.css"/>
+    <script type="text/javascript" src="/js/common.js" async></script>
+    <script type="text/javascript" src="/js/shop.js" async></script>
+    <script type="text/javascript" src="/js/nav.js" async></script>
+</head>
+<body onload="init()">
+<div class="container">
+    <div class="row" id="header_container"></div>
+    <div class="row"><label></label></div>
+    <div class="row">
+        <div class="col-15"><label></label>
+            <button onclick="location.replace('/shop/add')">Add Shop</button></div>
+        <div class="col-60"></div>
+        <div class="col-25">
+            <label><b>Search Shop</b></label>
+            <input type="text" onkeydown="allowOnlyIntegerInput(event)"
+                   onchange="location.replace(location.origin+'/shop?code='+parseInt(this.value))"
+                   placeholder="Type Shop Code ex:10005">
+        </div>
+    </div>
+    <div th:if="${page}" class="row">
+        <label></label><label>First Page:</label>
+        <a th:href="@{/shop(page=1)}">1</a> <label></label>
+        <a th:if="${page} gt 1" th:href="@{/shop(page=${page}-1)}">Prev</a> &nbsp;
+        <label>Current Page:</label><b th:text="${page}"></b>
+        <a th:if="${page} lt ${lastPage}" th:href="@{/shop(page=${page}+1)}">Next</a>  &nbsp;
+        <label>Last Page:</label>
+        <a th:href="@{/shop(page=${lastPage})}" th:text="${lastPage}"></a>
+        <label></label>
+        <label th:text="'Showing '+(${shops.size}*${page - 1} + 1) +'-'+${shops.size}*${page}+' of '+${totalShopCount}"></label>
+    </div>
+    <div class="row">
+        <div style="max-height:500px;overflow-y: auto">
+            <table class="styled-table">
+                <thead>
+                <tr>
+                    <th>SL</th><th>Edit Shop</th><th>Contract</th><th>Machine Code</th>
+                    <th>Machine Number</th><th>Shop Name</th><th>Shop Code</th>
+                    <th>Type</th><th>Grade</th><th>Proprietor Name</th>
+                    <th>Proprietor Phone</th><th>Proprietor NID</th>
+                    <th>Address</th><th>MSO</th>
+                    <th>Division</th><th>Region</th>
+                    <th>Territory</th><th>TSO Name</th>
+                    <th>TSO Phone</th><th>Distributor Name</th>
+                    <th>Distributor Code</th><th>Created By</th><th>Creation Time</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${shops.isEmpty()}"><td colspan="5">No Data Found</td></tr>
+                <tr th:each="shop,stat : ${shops}">
+                    <td th:if="${page}" th:text="${shops.size}*${page - 1}+${stat.index+1}"></td>
+                    <td th:unless="${page}" th:text="${stat.index+1}"></td>
+                    <td ><a th:href="@{/shop/edit(id=${shop.id})}">Edit</a></td>
+                    <td >
+                        <a th:href="@{/contract/add(shopId=${shop.id})}" >Add_Contract</a> <br><br>
+                        <a th:each="con:${shop.contracts}">
+                            <a th:href="@{/contract/edit(id=${con.id})}" th:text="'Edit_Contract_'+${con.id}">
+                            </a><br><br>
+                        </a>
+                    </td>
+                    <td>
+                        <br><br>
+                        <a th:each="con:${shop.contracts}">
+                            <a th:href="@{/machine(id=${con.machine.id})}" th:text="${con.machine.machineCode}">
+                            </a><br><br>
+                        </a>
+                    </td>
+                    <td>
+                        <br><br>
+                        <a th:each="con:${shop.contracts}">
+                            <a th:text="${con.machine.machineNumber}">
+                            </a><br><br>
+                        </a>
+                    </td>
+                    <td th:text="${shop.shopName}"></td>
+                    <td th:text="${shop.shopCode}"></td><td th:text="${shop.shopType.name}"></td>
+                    <td th:text="${shop.shopGrade.name}"></td><td th:text="${shop.proprietorName}"></td>
+                    <td th:text="${shop.proprietorPhone}"></td><td th:text="${shop.proprietorNid}"></td>
+                    <td th:text="${shop.address}"></td>
+                    <td th:text="${shop.mso}!=null?
+                        ${shop.mso.division+'-'+shop.mso.region+'-'+shop.mso.territory+'-'+shop.mso.phone}
+                        :''"></td>
+                    <td th:text="${shop.division}"></td>
+                    <td th:text="${shop.region}"></td><td th:text="${shop.territory}"></td>
+                    <td th:text="${shop.tsoName}"></td><td th:text="${shop.tsoPhone}"></td>
+                    <td th:text="${shop.distributorName}"></td><td th:text="${shop.distributorOracleCode}"></td>
+                    <td th:text="${shop.createdBy.username}"></td><td th:text="${shop.creationTime}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div th:if="${page}" class="row">
+        <label></label><label>First Page:</label>
+        <a th:href="@{/shop(page=1)}">1</a> <label></label>
+        <a th:if="${page} gt 1" th:href="@{/shop(page=${page}-1)}">Prev</a> &nbsp;
+        <label>Current Page:</label><b th:text="${page}"></b>
+        <a th:if="${page} lt ${lastPage}" th:href="@{/shop(page=${page}+1)}">Next</a>  &nbsp;
+        <label>Last Page:</label>
+        <a th:href="@{/shop(page=${lastPage})}" th:text="${lastPage}"></a>
+        <label></label>
+        <label th:text="'Showing '+(${shops.size}*${page - 1} + 1) +'-'+${shops.size}*${page}+' of '+${totalShopCount}"></label>
+    </div>
+
+    <div class="row"><label></label></div>
+    <div class="row" id="footer_container"></div>
+</div>
+</body>
+</html>

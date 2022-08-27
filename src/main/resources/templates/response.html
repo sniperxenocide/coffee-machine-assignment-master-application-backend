@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Response</title>
+    <link rel="stylesheet" type="text/css" href="/css/common.css"/>
+</head>
+<script th:inline="javascript">
+    function init() {
+        setTimeout(() => {
+            let url = [[${redirect}]];
+            if(url==null) url = "/machine";
+            location.replace(location.origin+url);
+        },5000);
+    }
+</script>
+<body onload="init()">
+     <div style="text-align: center;"><h1 th:text="${msg}"></h1></div>
+    <div style="text-align: center;"><h3 >You will be Redirected to Homepage in 5 Seconds</h3></div>
+</body>
+</html>
