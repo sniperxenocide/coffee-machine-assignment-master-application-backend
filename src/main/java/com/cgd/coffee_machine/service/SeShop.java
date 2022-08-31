@@ -1,10 +1,8 @@
 package com.cgd.coffee_machine.service;
 
 import com.cgd.coffee_machine.CgdCoffeeMachineModule;
-import com.cgd.coffee_machine.model.OracleDistributor;
-import com.cgd.coffee_machine.model.ResponsibleOfficer;
-import com.cgd.coffee_machine.model.Shop;
-import com.cgd.coffee_machine.model.User;
+import com.cgd.coffee_machine.model.*;
+import com.cgd.coffee_machine.repository.ReContractHistory;
 import com.cgd.coffee_machine.repository.ReOracleDistributor;
 import com.cgd.coffee_machine.repository.ReResponsibleOfficer;
 import com.cgd.coffee_machine.repository.ReShop;
@@ -24,15 +22,17 @@ public class SeShop {
     private final ReResponsibleOfficer reResponsibleOfficer;
     private final SeCommon seCommon;
     private final ReOracleDistributor reOracleDistributor;
+    private final ReContractHistory reContractHistory;
 
     private final int pageSize = 10;
     private final Logger logger = CgdCoffeeMachineModule.LOGGER;
 
-    public SeShop(ReShop repository, ReResponsibleOfficer reResponsibleOfficer, SeCommon seCommon, ReOracleDistributor reOracleDistributor) {
+    public SeShop(ReShop repository, ReResponsibleOfficer reResponsibleOfficer, SeCommon seCommon, ReOracleDistributor reOracleDistributor, ReContractHistory reContractHistory) {
         this.repository = repository;
         this.reResponsibleOfficer = reResponsibleOfficer;
         this.seCommon = seCommon;
         this.reOracleDistributor = reOracleDistributor;
+        this.reContractHistory = reContractHistory;
     }
 
     public ArrayList<ResponsibleOfficer> getAllMso(){
@@ -63,6 +63,10 @@ public class SeShop {
     public Shop getOne(Long id){
         if(id == null) return new Shop();
         return repository.findById(id).orElse(null);
+    }
+
+    public ArrayList<ContractHistory> getContractHistoryOfShop(Long shopId){
+        return (ArrayList<ContractHistory>) reContractHistory.getAllByShopId(shopId,Sort.by(Sort.Direction.DESC,"id"));
     }
 
     public Shop getOneByShopCode(String shopCode){

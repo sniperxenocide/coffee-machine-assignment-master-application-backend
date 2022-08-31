@@ -19,32 +19,6 @@
                 <h2 id="page-header" th:text="${add} ? 'Add New Contract' : 'Edit Contract'"></h2>
             </div>
         </div>
-<!--        <div class="col-20">-->
-<!--            <form th:unless="${add}" th:action="'/contract/delete?id='+${contract.id}"-->
-<!--                  method="post">-->
-<!--                <button type="button" style="background-color: crimson" onclick="modalAction()" >-->
-<!--                    <b>Delete Contract</b>-->
-<!--                </button>-->
-<!--                <div id="modal"  class="modal">-->
-<!--                    <div class="modal-content" style="width: 50%">-->
-<!--                        <div class="container">-->
-<!--                            <div class="row"><span class="close">&times;</span></div>-->
-<!--                            <div class="row" style="text-align: center;">-->
-<!--                                <h2>Do you want to Delete this Contract?</h2></div>-->
-<!--                            <div class="row">-->
-<!--                                <div class="col-45"></div>-->
-<!--                                <div class="col-10">-->
-<!--                                    <button type="submit" style="background-color: crimson" >-->
-<!--                                        <b>YES</b>-->
-<!--                                    </button>-->
-<!--                                </div>-->
-<!--                                <div class="col-45"></div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </form>-->
-<!--        </div>-->
         <div class="col-5"></div>
     </div>
     <!-- Check if errorMessage is not null and not empty -->
@@ -80,7 +54,8 @@
         </div>
         <div class="col-5"></div>
         <div class="col-45">
-            <div class="row" th:if="${add}">
+<!--            th:if="${add}"-->
+            <div id="machine_selection_div" class="row" th:if="${add or (!add and changeMachine)}">
                 <div class="col-5"></div>
                 <div class="col-20"><label><b>Machine</b></label></div>
                 <div class="col-10"><label>CVM</label></div>
@@ -91,7 +66,7 @@
                         function loadMachine(val){
                             location.replace(location.origin+'/contract/'+
                                 ([[${add}]]?'add?shopId='+[[${shop.id}]]:'edit?id='+[[${contract.id}]])+
-                                '&machineId='+parseInt(val));
+                                '&machineId='+parseInt(val)+([[${changeMachine}]]?'&changeMachine=true':''));
                         }
                     </script>
                 </div>
@@ -105,10 +80,13 @@
                     </select>
                 </div>
             </div>
-            <div class="row" th:unless="${add}" >
+            <div id="machine_change_btn_div" class="row" th:if="${!add and !changeMachine}" >
                 <div class="col-40"></div>
                 <div class="col-20"><label><b>Machine</b></label></div>
-                <div class="col-40"></div>
+                <div class="col-10"></div>
+                <div class="col-30"><button class="red-button"
+                th:onclick="'onClickChangeMachine('+${contract.id}+')'">
+                    Change Machine</button></div>
             </div>
             <label></label>
             <div class="row">
@@ -134,17 +112,30 @@
                     </table>
                 </div>
             </div>
-            <div th:if="${add} and ${machine}">
-                <label th:if="${machine.machineNumber.isEmpty()}" style="color: red">
+            <div class="row" th:if="${machine!=null and machine.machineNumber.isEmpty()}">
+                <label  style="color: red">
                     Machine Serial Number is Missing.Please add the Machine Number below.</label>
-                <div class="row">
-                    <div class="col-50">
-                        <label><b>Overwrite Machine Number</b></label>
+            </div>
+            <div class="row">
+                <div class="col-45">
+                    <div th:if="${machine!=null and machine.machineNumber.isEmpty()}">
+                        <label><b>Machine Serial Number</b></label>
                         <input id="machine-number-update-txt" type="text"
                                onchange="appendMachineNumberWithCreate(this.value)">
                     </div>
                 </div>
+                <div class="col-10"> </div>
+                <div class="col-45" th:if="${!add and changeMachine}">
+                    <label><b>Reason of Change</b></label>
+                    <select onchange="onChangeReason(this.value)">
+                        <option value="">-SELECT REASON-</option>
+                        <option value="BROKEN">Machine out of Service</option>
+                        <option value="REPETITIVE">Repetitive Problem</option>
+                        <option value="DEMAND">Customer Demand</option>
+                    </select>
+                </div>
             </div>
+
         </div>
     </div>
     <div class="row"><label></label></div>
@@ -245,15 +236,61 @@
                     <button type="submit" th:text="${add} ? 'Create' : 'Update'"
                             th:value="${add} ? 'Create' : 'Update'" ></button>
                 </div>
-
                 <div class="col-40"></div>
             </div>
         </form>
         <br/>
-
+    </div>
+    <div class="row"><label></label></div>
+    <div th:if="${!add}" style="border: 1px solid black;border-radius: 5px;padding: 5px" >
+        <div style="text-align: center;">
+            <h2>Delete Contract</h2>
+        </div>
+        <div class="row" >
+            <div class="col-20"></div>
+            <div class="col-35">
+                <label><b>Reason of Deletion</b></label>
+                <select th:onchange="'onSelectDeleteReason(this.value,'+${contract.id}+')'">
+                    <option value="">-SELECT REASON-</option>
+                    <option value="CANCEL">Contract Cancelled</option>
+                    <option value="SHUTDOWN">Customer Closed his Business</option>
+                </select>
+            </div>
+            <div class="col-5"></div>
+            <div class="col-20">
+                <label> </label>
+                <form id="contract-delete-form" th:action="'/contract/delete?id='+${contract.id}"
+                      method="post">
+                    <button type="button" style="background-color: crimson" onclick="modalAction()" >
+                        <b>Delete Contract</b>
+                    </button>
+                    <div id="modal"  class="modal">
+                        <div class="modal-content" style="width: 50%">
+                            <div class="container">
+                                <div class="row"><span class="close">&times;</span></div>
+                                <div class="row" style="text-align: center;">
+                                    <h2>Do you want to Delete this Contract?</h2></div>
+                                <div class="row">
+                                    <div class="col-45"></div>
+                                    <div class="col-10">
+                                        <button type="submit" style="background-color: crimson" >
+                                            <b>YES</b>
+                                        </button>
+                                    </div>
+                                    <div class="col-45"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-20"></div>
+        </div>
+        <div class="row"><label></label></div>
     </div>
 
     <div class="row"><label></label></div>
+
     <div class="row" id="footer_container"></div>
 </div>
 

@@ -148,7 +148,32 @@
         <!-- Check if errorMessage is not null and not empty -->
         <div th:if="${errorMessage}" th:utext="${errorMessage}" class="errm_span"></div>
     </div>
-
+    <div class="row"><label></label></div>
+    <div class="row">
+        <div style="text-align: center;"><h2>Machine Assignment History</h2></div>
+        <div style="max-height:500px;overflow-y: auto">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>SL</th><th>Machine Number</th><th>Machine Model</th>
+                        <th>Machine Brand</th><th>Installation Date</th>
+                        <th>Change Reason</th><th>Withdrawn Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="c,stat:${contractHistory}">
+                        <td th:text="${stat.index+1}"></td>
+                        <td th:text="${c.machineNumber}"></td>
+                        <td th:text="${c.machineModel}"></td>
+                        <td th:text="${c.machineBrand}"></td>
+                        <td th:text="${c.handoverDate}"></td>
+                        <td th:text="${c.changeReason}"></td>
+                        <td th:text="${c.creationTime}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
     <div class="row"><label></label></div>
     <div class="row" id="footer_container"></div>
 </div>

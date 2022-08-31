@@ -22,7 +22,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'org.json:json:20180130'
-    compileOnly 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
     implementation 'org.flywaydb:flyway-core'
 }

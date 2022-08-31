@@ -33,7 +33,7 @@ public class ContractController {
             }
             if(machineId!=null) machine = service.getMachineWithNoContract(machineId);
         }catch (Exception e){ exception = e;}
-        addAttrs(model,true,contract,shop,machine,exception);
+        addAttrs(model,true,false,contract,shop,machine,exception);
         return "contract-add-edit";
     }
 
@@ -49,14 +49,15 @@ public class ContractController {
             return "response";
         }catch (Exception e){
             service.logger.info(e.getMessage());
-            addAttrs(model,true,null,contract.getShop(),contract.getMachine(),e);
+            addAttrs(model,true,false,null,contract.getShop(),contract.getMachine(),e);
             return "contract-add-edit";
         }
     }
 
     @GetMapping(value = {"/contract/edit"})
     public String editContractPage(Model model, @RequestParam Long id,
-                               @RequestParam(required = false) Long machineId) {
+                               @RequestParam(required = false) Long machineId,
+                               @RequestParam(required = false,defaultValue = "false" ) boolean changeMachine) {
         Contract contract = null;
         Shop shop = null;  Machine machine = null;  Exception exception = null;
         try {
@@ -65,14 +66,16 @@ public class ContractController {
             shop = contract.getShop();
             machine = machineId==null ? contract.getMachine():service.getMachineWithNoContract(machineId);
         }catch (Exception e){ exception = e; e.printStackTrace();}
-        addAttrs(model,false,contract,shop,machine,exception);
+        addAttrs(model,false,changeMachine,contract,shop,machine,exception);
         return "contract-add-edit";
     }
 
     @PostMapping("/contract/update")
-    public String updateContract(Model model, @ModelAttribute("contract") Contract contract){
+    public String updateContract(HttpServletRequest request,@RequestParam(required = false) String machineNumber,
+                                 @RequestParam(required = false) String changeReason,
+                                 Model model, @ModelAttribute("contract") Contract contract){
         try {
-            service.updateContract(contract);
+            service.updateContract(contract,request,machineNumber,changeReason);
             model.addAttribute("msg",
                     "Contract Updated. Machine: "+contract.getMachine().getMachineCode()
                             +" Assigned to Shop: "+contract.getShop().getShopCode());
@@ -80,35 +83,37 @@ public class ContractController {
             return "response";
         }catch (Exception e){
             service.logger.info(e.getMessage());
-            addAttrs(model,false,null,contract.getShop(),contract.getMachine(),e);
+            addAttrs(model,false,false,null,contract.getShop(),contract.getMachine(),e);
             return "contract-add-edit";
         }
     }
 
     @PostMapping("/contract/delete")
-    public String deleteContract(Model model,@RequestParam Long id) {
+    public String deleteContract(HttpServletRequest request,Model model,@RequestParam Long id,
+                                 @RequestParam(required = false) String deleteReason) {
         Contract contract = null;Shop shop=null;Machine machine=null;
         try {
             contract = service.getOne(id);
             if(contract==null) throw new Exception("Contract Doesn't Exist");
             shop=contract.getShop(); machine=contract.getMachine();
-            service.deleteContract(contract);
+            service.deleteContract(request,contract,deleteReason);
             model.addAttribute("msg","Contract ID: "+id+" Deleted.");
             model.addAttribute("redirect","/shop");
             return "response";
         }catch (Exception e){
-            addAttrs(model,false,null,shop,machine,e);
+            addAttrs(model,false,false,null,shop,machine,e);
             return "contract-add-edit";
         }
     }
 
-    public void addAttrs(Model model, boolean add, Contract contract, Shop shop, Machine machine, Exception e){
+    public void addAttrs(Model model, boolean add,boolean changeMachine, Contract contract, Shop shop, Machine machine, Exception e){
         model.addAttribute("add", add);
+        model.addAttribute("changeMachine", changeMachine);
         if(e != null) model.addAttribute("errorMessage", e.getMessage());
         if(contract!=null) model.addAttribute("contract", contract);
         if(shop!=null) model.addAttribute("shop", shop);
         if(machine!=null) model.addAttribute("machine", machine);
-        if(add) model.addAttribute("availableMachines",service.getAvailableMachines());
+        model.addAttribute("availableMachines",service.getAvailableMachines()); //if(add)
         model.addAttribute("installment_types",service.getAllInstallmentType());
         model.addAttribute("payment_terms",service.getAllPaymentTerm());
     }

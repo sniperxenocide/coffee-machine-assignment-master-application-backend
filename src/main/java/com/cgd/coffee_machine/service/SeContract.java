@@ -3,12 +3,14 @@ package com.cgd.coffee_machine.service;
 import com.cgd.coffee_machine.CgdCoffeeMachineModule;
 import com.cgd.coffee_machine.model.*;
 import com.cgd.coffee_machine.repository.ReContract;
+import com.cgd.coffee_machine.repository.ReContractHistory;
 import com.cgd.coffee_machine.repository.ReMachine;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Service
 public class SeContract {
@@ -19,9 +21,10 @@ public class SeContract {
     private final ReMachine reMachine;
     private final SePaymentTerm sePaymentTerm;
     private final SeInstallmentType seInstallmentType;
+    private final ReContractHistory reContractHistory;
     public final Logger logger = CgdCoffeeMachineModule.LOGGER;
 
-    public SeContract(ReContract repository, SeCommon seCommon, SeShop seShop, SeMachine seMachine, ReMachine reMachine, SePaymentTerm sePaymentTerm, SeInstallmentType seInstallmentType) {
+    public SeContract(ReContract repository, SeCommon seCommon, SeShop seShop, SeMachine seMachine, ReMachine reMachine, SePaymentTerm sePaymentTerm, SeInstallmentType seInstallmentType, ReContractHistory reContractHistory) {
         this.repository = repository;
         this.seCommon = seCommon;
         this.seShop = seShop;
@@ -29,6 +32,7 @@ public class SeContract {
         this.reMachine = reMachine;
         this.sePaymentTerm = sePaymentTerm;
         this.seInstallmentType = seInstallmentType;
+        this.reContractHistory = reContractHistory;
     }
 
     public Contract getOne(Long id){
@@ -73,7 +77,9 @@ public class SeContract {
         logger.info("Contract Created: "+contract);
     }
 
-    public void updateContract(Contract contract) throws Exception{
+    public void updateContract(Contract contract,HttpServletRequest request,String machineNumber,String changeReason) throws Exception{
+        User user = seCommon.getUser(request);
+        if(user == null) throw new Exception("Unauthorized Request");
         try {
             logger.info("Before Contract Update: "+contract);
             Contract prvContract = repository.findById(contract.getId()).orElse(null);
@@ -81,7 +87,22 @@ public class SeContract {
             contract.setCreatedBy(prvContract.getCreatedBy());
             contract.setCreationTime(prvContract.getCreationTime());
             System.out.println(contract);
+            if(!Objects.equals(prvContract.getMachine().getId(), contract.getMachine().getId())){
+                //Handle Machine Change and Save Change History
+                if(machineNumber==null || machineNumber.trim().length()==0){
+                    if(contract.getMachine().getMachineNumber()==null || contract.getMachine().getMachineNumber().trim().length()==0){
+                        throw new Exception("Must Provide Machine Serial Number");
+                    }
+                    else machineNumber = contract.getMachine().getMachineNumber();
+                }
+
+                ContractHistory contractHistory = new ContractHistory(prvContract,user,changeReason);
+                reContractHistory.save(contractHistory);
+                logger.info("Contract History Saved.History ID:  "+contractHistory.getId());
+            }
             repository.save(contract);
+            contract.getMachine().setMachineNumber(machineNumber);
+            reMachine.save(contract.getMachine());
             logger.info("Contract Updated: "+contract);
         }catch (Exception e){
             e.printStackTrace();
@@ -89,9 +110,15 @@ public class SeContract {
         }
     }
 
-    public void deleteContract(Contract contract) throws Exception{
+    public void deleteContract(HttpServletRequest request,Contract contract,String deleteReason) throws Exception{
+        User user = seCommon.getUser(request);
+        if(user == null) throw new Exception("Unauthorized Request");
         try {
+            ContractHistory contractHistory = new ContractHistory(contract,user,deleteReason);
+            contractHistory = reContractHistory.save(contractHistory);
+            logger.info("Contract History Saved.History ID:  "+contractHistory.getId());
             repository.delete(contract);
+            logger.info("Contract Deleted."+contractHistory);
         }catch (Exception e){
             e.printStackTrace();
             throw e;

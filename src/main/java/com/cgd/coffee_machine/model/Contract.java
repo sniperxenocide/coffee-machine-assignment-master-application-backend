@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Getter
 @Setter
@@ -42,6 +43,7 @@ public class Contract  {
     private User createdBy;
     @CreationTimestamp
     private LocalDateTime creationTime;
+
 
     public void setHandoverDate(String handOverDate){
         this.handOverDate = LocalDate.parse(handOverDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));

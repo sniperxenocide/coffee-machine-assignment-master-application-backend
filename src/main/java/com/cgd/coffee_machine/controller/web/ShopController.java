@@ -72,6 +72,7 @@ public class ShopController {
             model.addAttribute("msg","No Shop found with this ID: "+id);
             return "response";
         }
+        model.addAttribute("contractHistory",service.getContractHistoryOfShop(shop.getId()));
         addAttrs(model,false,shop,null);
         return "shop-add-edit";
     }

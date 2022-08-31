@@ -19,8 +19,9 @@
             <div class="col-45"></div>
             <div class="col-15">
                 <label><b>Search By Number</b></label>
-                <input type="text" onkeydown="allowOnlyIntegerInput(event)"
-                       onchange="location.replace(location.origin+'/machine?machineNumber='+parseInt(this.value))"
+<!--                onkeydown="allowOnlyIntegerInput(event)"-->
+                <input type="text"
+                       onchange="location.replace(location.origin+'/machine?machineNumber='+this.value)"
                        placeholder="Machine Serial Number">
             </div>
             <div class="col-5"></div>

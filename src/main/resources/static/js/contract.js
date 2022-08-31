@@ -2,6 +2,10 @@ let paymentTerms = [];
 let firstTime = false;
 let isAdd = false;
 
+let params = {
+    'machineNumber':'','changeReason':''
+}
+
 function init() {
     setHeader();
     setFooter();
@@ -14,14 +18,38 @@ function machineSearchBoxSet(val) {
     el.onchange() ;
 }
 
+function onChangeMachineSearchBox(contractId,shopId,machineId,add,changeMachine){
+    let url = location.origin+'/contract'+
+        (add?'/add?shopId='+shopId:'/edit?id='+contractId)+'&machineId='+machineId+
+        (changeMachine?'&changeMachine=true':'');
+    console.log(url);
+}
+
+function onClickChangeMachine(contractId){
+    if(confirm('Are you sure you want to change Machine for this Shop ???')){
+        location.replace(location.origin+'/contract/edit?id='+contractId+'&changeMachine=true');
+    }
+}
 
 function appendMachineNumberWithCreate(val) {
+    params['machineNumber'] = val.toString().trim();
+    updateFormAction();
+
+}
+
+function onChangeReason(val){
+    params['changeReason'] = val;
+    updateFormAction();
+}
+
+function updateFormAction(){
     let form = document.getElementById('contract-form');
-    let param = '';
-    if(val.toString().trim().length>=3){
-        param = '?machineNumber='+val.toString().trim();
-    }
-    form.action = '/contract/create' + param;
+    let newAction = form.action.includes('create')?'/contract/create?':'/contract/update?';
+    for(let key in params)
+        if(params[key].length>0) newAction+=key+'='+params[key]+'&';
+    newAction = newAction.slice(0,-1);
+    form.action = newAction;
+    console.log(newAction);
 }
 
 function loadPaymentTermList() {
@@ -40,6 +68,13 @@ function loadPaymentTermList() {
             document.getElementById('paymentTerm').onchange(event);
 
         }catch (e){console.log(e);}
+    }
+}
+
+function onSelectDeleteReason(val,contractId){
+    let form = document.getElementById('contract-delete-form');
+    if(val.length>0){
+        form.action = '/contract/delete?id='+contractId+'&deleteReason='+val;
     }
 }
 
