@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -41,9 +42,10 @@ public interface ReMachine extends JpaRepository<Machine, Long>, JpaSpecificatio
             "left join OriginCountry oc on m.originCountry.id = oc.id " +
             "left join ChamberOption co on m.chamberOption.id = co.id " +
             "left join Contract c on m.id = c.machine.id " +
-            "group by b.name,oc.name,co.name"
+            "where m.creationTime between ?1 and ?2 " +
+            "group by b.name,oc.name,co.name "
     )
-    List<MachineSummary> findBrandCountryWiseMachineSummary();
+    List<MachineSummary> findBrandCountryWiseMachineSummary(LocalDateTime start,LocalDateTime end);
 
 
 }

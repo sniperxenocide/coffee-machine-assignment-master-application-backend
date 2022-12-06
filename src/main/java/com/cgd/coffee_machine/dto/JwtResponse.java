@@ -1,4 +1,4 @@
-package com.cgd.coffee_machine.request_response;
+package com.cgd.coffee_machine.dto;
 
 import com.cgd.coffee_machine.model.User;
 import lombok.AllArgsConstructor;

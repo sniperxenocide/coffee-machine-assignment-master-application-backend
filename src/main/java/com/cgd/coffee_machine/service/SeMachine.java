@@ -3,11 +3,9 @@ package com.cgd.coffee_machine.service;
 import com.cgd.coffee_machine.CgdCoffeeMachineModule;
 import com.cgd.coffee_machine.model.Machine;
 import com.cgd.coffee_machine.model.User;
-import com.cgd.coffee_machine.report.MachineSummary;
 import com.cgd.coffee_machine.repository.ReMachine;
-import com.cgd.coffee_machine.request_response.Response;
+import com.cgd.coffee_machine.dto.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Map;
 
 @Service
 public class SeMachine {

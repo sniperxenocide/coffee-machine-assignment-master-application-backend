@@ -2,7 +2,7 @@ package com.cgd.coffee_machine.service;
 
 import com.cgd.coffee_machine.model.PaymentTerm;
 import com.cgd.coffee_machine.repository.RePaymentTerm;
-import com.cgd.coffee_machine.request_response.Response;
+import com.cgd.coffee_machine.dto.Response;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

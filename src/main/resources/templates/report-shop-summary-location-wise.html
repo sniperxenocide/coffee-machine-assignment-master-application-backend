@@ -7,6 +7,22 @@
 <body>
 <div class="container">
     <div style="text-align: center;"><h2>Location Wise Vending Machine BIZ Scope Status</h2></div>
+    <div class="row">
+        <div class="col-20">
+            <label> <b>Start</b></label>
+            <input id="start-date-2" type="date" th:value="${startDate}"> <!--th:value="${startDate}"-->
+        </div>
+        <div class="col-5"></div>
+        <div class="col-20">
+            <label> <b>End</b></label>
+            <input id="end-date-2" type="date" th:value="${endDate}"> <!--th:value="${endDate}"-->
+        </div>
+        <div class="col-5"></div>
+        <div class="col-10"><label> </label>
+            <button onclick="openReportModal(2)"><b>OK</b></button>
+        </div>
+        <div class="col-40"></div>
+    </div>
     <div class="row"><label></label></div>
     <div class="row">
         <div class="col-25"><label><b>Division Wise</b></label></div>

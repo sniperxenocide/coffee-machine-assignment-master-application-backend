@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,27 +22,30 @@ public interface ReShop extends JpaRepository<Shop, Long>, JpaSpecificationExecu
             " count(distinct s.id) ,count(c.id)," +
             " sum(case when c.id is null then 1 else 0 end) ) from Shop s " +
             " left join Contract c on s.id = c.shop.id " +
+            " where c.creationTime between ?1 and ?2 "+
             " group by s.division,s.region,s.territory "
     )
-    List<LocationWiseShopSummary> getTerritoryWiseShopSummary();
+    List<LocationWiseShopSummary> getTerritoryWiseShopSummary(LocalDateTime start,LocalDateTime end);
 
     @Query(value = " select new com.cgd.coffee_machine.report.LocationWiseShopSummary( " +
             " s.division,s.region,'', " +
             " count(distinct s.id) ,count(c.id)," +
             " sum(case when c.id is null then 1 else 0 end) ) from Shop s " +
             " left join Contract c on s.id = c.shop.id " +
+            " where c.creationTime between ?1 and ?2 "+
             " group by s.division,s.region "
     )
-    List<LocationWiseShopSummary> getRegionWiseShopSummary();
+    List<LocationWiseShopSummary> getRegionWiseShopSummary(LocalDateTime start,LocalDateTime end);
 
     @Query(value = " select new com.cgd.coffee_machine.report.LocationWiseShopSummary( " +
             " s.division,'','', " +
             " count(distinct s.id) ,count(c.id)," +
             " sum(case when c.id is null then 1 else 0 end) ) from Shop s " +
             " left join Contract c on s.id = c.shop.id " +
+            " where c.creationTime between ?1 and ?2 "+
             " group by s.division "
     )
-    List<LocationWiseShopSummary> getDivisionWiseShopSummary();
+    List<LocationWiseShopSummary> getDivisionWiseShopSummary(LocalDateTime start,LocalDateTime end);
 
 
     @Query(value = "select new com.cgd.coffee_machine.report.TypeWiseShopSummary" +

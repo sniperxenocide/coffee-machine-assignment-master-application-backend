@@ -19,8 +19,9 @@
         <div class="col-60"></div>
         <div class="col-25">
             <label><b>Search Shop</b></label>
-            <input type="text" onkeydown="allowOnlyIntegerInput(event)"
-                   onchange="location.replace(location.origin+'/shop?code='+parseInt(this.value))"
+<!--            onkeydown="allowOnlyIntegerInput(event)"  parseInt(this.value)) -->
+            <input type="text"
+                   onchange="location.replace(location.origin+'/shop?code='+this.value)"
                    placeholder="Type Shop Code ex:10005">
         </div>
     </div>

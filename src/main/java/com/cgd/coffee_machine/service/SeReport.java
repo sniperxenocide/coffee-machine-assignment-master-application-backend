@@ -1,6 +1,5 @@
 package com.cgd.coffee_machine.service;
 
-import com.cgd.coffee_machine.model.OracleDistributor;
 import com.cgd.coffee_machine.model.Shop;
 import com.cgd.coffee_machine.report.LocationWiseShopSummary;
 import com.cgd.coffee_machine.report.MachineSummary;
@@ -8,11 +7,11 @@ import com.cgd.coffee_machine.report.TypeWiseShopSummary;
 import com.cgd.coffee_machine.repository.ReMachine;
 import com.cgd.coffee_machine.repository.ReOracleDistributor;
 import com.cgd.coffee_machine.repository.ReShop;
-import com.cgd.coffee_machine.request_response.MarketHierarchy;
-import org.springframework.data.domain.Sort;
+import com.cgd.coffee_machine.dto.MarketHierarchy;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 @Service
@@ -27,8 +26,10 @@ public class SeReport {
         this.reOracleDistributor = reOracleDistributor;
     }
 
-    public ArrayList<MachineSummary> getMachineSummary(){
-        ArrayList<MachineSummary> list = (ArrayList<MachineSummary>) reMachine.findBrandCountryWiseMachineSummary();
+    public ArrayList<MachineSummary> getMachineSummary(String startDate,String endDate){
+        LocalDateTime start = LocalDateTime.parse(startDate+"T00:00:00");
+        LocalDateTime end = LocalDateTime.parse(endDate+"T00:00:00").plus(1, ChronoUnit.DAYS);
+        ArrayList<MachineSummary> list = (ArrayList<MachineSummary>) reMachine.findBrandCountryWiseMachineSummary(start,end);
         MachineSummary total = new MachineSummary("TOTAL","","",(long)0,(long)0,(long)0);
         for (MachineSummary ms:list) {
             total.setTotal(total.getTotal()+ms.getTotal());
@@ -39,16 +40,23 @@ public class SeReport {
         return  list;
     }
 
-    public ArrayList<LocationWiseShopSummary> getTerritoryWiseShopSummary(){
-        return  (ArrayList<LocationWiseShopSummary>) reShop.getTerritoryWiseShopSummary();
+    public ArrayList<LocationWiseShopSummary> getTerritoryWiseShopSummary(String startDate,String endDate){
+        LocalDateTime start = LocalDateTime.parse(startDate+"T00:00:00");
+        LocalDateTime end = LocalDateTime.parse(endDate+"T00:00:00").plus(1, ChronoUnit.DAYS);
+        return  (ArrayList<LocationWiseShopSummary>) reShop.getTerritoryWiseShopSummary(start,end);
     }
 
-    public ArrayList<LocationWiseShopSummary> getRegionWiseShopSummary(){
-        return  (ArrayList<LocationWiseShopSummary>) reShop.getRegionWiseShopSummary();
+    public ArrayList<LocationWiseShopSummary> getRegionWiseShopSummary(String startDate,String endDate){
+        LocalDateTime start = LocalDateTime.parse(startDate+"T00:00:00");
+        LocalDateTime end = LocalDateTime.parse(endDate+"T00:00:00").plus(1, ChronoUnit.DAYS);
+        return  (ArrayList<LocationWiseShopSummary>) reShop.getRegionWiseShopSummary(start,end);
     }
 
-    public ArrayList<LocationWiseShopSummary> getDivisionWiseShopSummary(){
-        ArrayList<LocationWiseShopSummary> list = (ArrayList<LocationWiseShopSummary>) reShop.getDivisionWiseShopSummary();
+    public ArrayList<LocationWiseShopSummary> getDivisionWiseShopSummary(String startDate,String endDate){
+        LocalDateTime start = LocalDateTime.parse(startDate+"T00:00:00");
+        LocalDateTime end = LocalDateTime.parse(endDate+"T00:00:00").plus(1, ChronoUnit.DAYS);
+        ArrayList<LocationWiseShopSummary> list =
+                (ArrayList<LocationWiseShopSummary>) reShop.getDivisionWiseShopSummary(start,end);
         LocationWiseShopSummary total = new LocationWiseShopSummary("TOTAL","","",(long)0,(long)0,(long)0);
         for(LocationWiseShopSummary ls:list){
             total.setTotalShop(total.getTotalShop()+ ls.getTotalShop());

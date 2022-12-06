@@ -7,6 +7,22 @@
 <body>
     <div class="container">
         <div style="text-align: center;"><h2>Machine Summary Report</h2></div>
+        <div class="row">
+            <div class="col-15">
+                <label> <b>Start</b></label>
+                <input id="start-date" type="date" th:value="${startDate}">
+            </div>
+            <div class="col-5"></div>
+            <div class="col-15">
+                <label> <b>End</b></label>
+                <input id="end-date" type="date" th:value="${endDate}" >
+            </div>
+            <div class="col-5"></div>
+            <div class="col-10"><label> </label>
+                <button onclick="openReportModal(1)"><b>OK</b></button>
+            </div>
+            <div class="col-50"></div>
+        </div>
         <div class="row"><label></label></div>
         <div class="row">
             <div style="max-height:500px;overflow-y: auto">
