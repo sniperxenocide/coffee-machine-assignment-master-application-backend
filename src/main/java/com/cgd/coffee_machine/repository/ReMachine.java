@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public interface ReMachine extends JpaRepository<Machine, Long>, JpaSpecificationExecutor<Machine> {
@@ -47,5 +48,6 @@ public interface ReMachine extends JpaRepository<Machine, Long>, JpaSpecificatio
     )
     List<MachineSummary> findBrandCountryWiseMachineSummary(LocalDateTime start,LocalDateTime end);
 
+    Optional<Machine> getByMachineNumber(String machineNumber);
 
 }

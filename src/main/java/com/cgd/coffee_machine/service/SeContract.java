@@ -71,6 +71,11 @@ public class SeContract {
             }
             else machineNumber = contract.getMachine().getMachineNumber();
         }
+        else {   //Checking Duplicate Machine Serial Number
+            if(!Objects.equals(contract.getMachine().getMachineNumber(), machineNumber) &&
+                    reMachine.getByMachineNumber(machineNumber).isPresent())
+                throw new Exception("Machine Already Exist with this Machine Number "+machineNumber);
+        }
         repository.save(contract);
         contract.getMachine().setMachineNumber(machineNumber);
         reMachine.save(contract.getMachine());

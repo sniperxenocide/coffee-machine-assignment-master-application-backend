@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Service
 public class SeMachine {
@@ -105,6 +106,12 @@ public class SeMachine {
             logger.info("Before Machine Update: "+machine);
             Machine prvMachine = repository.findById(machine.getId()).orElse(null);
             if(prvMachine == null) throw  new Exception("No Machine Profile found for this ID: "+machine.getId());
+            //Checking Duplicate Machine Serial Number
+            if(!Objects.equals(prvMachine.getMachineNumber(), machine.getMachineNumber())){
+                if(repository.getByMachineNumber(machine.getMachineNumber()).isPresent()){
+                    throw new Exception("Machine already exist with this Machine Number "+machine.getMachineNumber());
+                }
+            }
             machine.setCreatedBy(prvMachine.getCreatedBy());
             machine.setCreationTime(prvMachine.getCreationTime());
             repository.save(machine);
@@ -118,6 +125,10 @@ public class SeMachine {
     public Response updateMachineNumber(Long id,String machineNumber){
         Machine machine = repository.findById(id).orElse(null);
         if (machine==null) return new Response(false,"Machine Not Found");
+        //Checking Duplicate Machine Serial Number
+        if(!Objects.equals(machine.getMachineNumber(), machineNumber) &&
+                repository.getByMachineNumber(machineNumber).isPresent())
+            return new Response(false,"Machine Already Exist for this Machine Number "+machineNumber);
         machine.setMachineNumber(machineNumber);
         repository.save(machine);
         logger.info("Machine Number "+machineNumber+" Updated for Machine "+machine.getMachineCode());
