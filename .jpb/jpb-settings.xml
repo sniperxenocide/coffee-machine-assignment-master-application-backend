@@ -89,4 +89,13 @@
     <exclude-change idName="user#username" tagName="dropNotNullConstraint" />
     <exclude-change idName="dummy" tagName="dropTable" />
   </component>
+  <component name="PersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit name="Default">
+        <packages>
+          <package value="com.cgd.coffee_machine" />
+        </packages>
+      </persistence-unit>
+    </persistence-units>
+  </component>
 </project>

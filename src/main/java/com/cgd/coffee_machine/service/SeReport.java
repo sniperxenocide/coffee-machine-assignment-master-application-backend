@@ -8,13 +8,14 @@ import com.cgd.coffee_machine.repository.ReMachine;
 import com.cgd.coffee_machine.repository.ReOracleDistributor;
 import com.cgd.coffee_machine.repository.ReShop;
 import com.cgd.coffee_machine.dto.MarketHierarchy;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-@Service
+@Service @Slf4j
 public class SeReport {
     private final ReMachine reMachine;
     private final ReShop reShop;
@@ -83,6 +84,7 @@ public class SeReport {
         String ter = territory;
         if (territory==null || territory.length()==0) return new ArrayList<>();
         if(territory.equals("-")) ter="%";
+        log.info("Territory {}",ter);
         return (ArrayList<Shop>) reShop.getAllShopByTerritory(ter);
     }
 

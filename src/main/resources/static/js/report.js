@@ -39,7 +39,8 @@ function openReportModal(val) {
 
     else if(val==4) {
         url+="/report/shop_machine_detail/location_wise";
-        if(selectedTerritory.trim().length>0) url+="?territory="+selectedTerritory;
+        if(selectedTerritory.trim().length>0) url+="?territory="
+            +encodeURIComponent(selectedTerritory);
         currentReport = ['report-table-location-wise-shop-detail'];
         selectedTerritory = "";
     }

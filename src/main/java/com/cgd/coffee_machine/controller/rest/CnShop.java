@@ -21,7 +21,7 @@ public class CnShop {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.setBasicAuth("city","city123");
-        HttpEntity<String> entity = new HttpEntity<String>(headers);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
         return restTemplate.exchange(
                 "http://10.10.1.108:8080/api/customer/detail?customerNumber="+code,

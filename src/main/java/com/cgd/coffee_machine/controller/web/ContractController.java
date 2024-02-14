@@ -4,13 +4,14 @@ import com.cgd.coffee_machine.model.Contract;
 import com.cgd.coffee_machine.model.Machine;
 import com.cgd.coffee_machine.model.Shop;
 import com.cgd.coffee_machine.service.SeContract;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Controller
+@Controller @Slf4j
 public class ContractController {
     private final SeContract service;
 
@@ -101,6 +102,8 @@ public class ContractController {
             model.addAttribute("redirect","/shop");
             return "response";
         }catch (Exception e){
+            e.printStackTrace();
+            log.info(e.getMessage());
             addAttrs(model,false,false,null,shop,machine,e);
             return "contract-add-edit";
         }
