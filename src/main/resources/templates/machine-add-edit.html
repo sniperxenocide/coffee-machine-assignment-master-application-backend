@@ -136,6 +136,45 @@
         </div>
 
         <div class="row"><label></label></div>
+        <div class="row">
+            <div style="text-align: center;"><h2>Shop Assignment History</h2></div>
+            <div style="max-height:500px;overflow-y: auto">
+                <table class="styled-table">
+                    <thead>
+                    <tr>
+                        <th>SL</th><th>Division</th><th>Region</th>
+                        <th>Territory</th><th>MSO</th><th>MSO Phone</th>
+                        <th>Shop Name</th><th>Shop Code</th><th>Shop Address</th>
+                        <th>Owner Name</th><th>Owner Phone</th>
+                        <th>Change Reason</th><th>Handover Date</th>
+                        <th>Withdrawn Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="c,stat:${contractHistory}">
+                        <td th:text="${stat.index+1}"></td>
+                        <td th:text="${c.division}"></td>
+                        <td th:text="${c.region}"></td>
+                        <td th:text="${c.territory}"></td>
+
+                        <td th:text="${c.msoName}"></td>
+                        <td th:text="${c.msoPhone}"></td>
+                        <td th:text="${c.shopName}"></td>
+                        <td th:text="${c.shopCode}"></td>
+                        <td th:text="${c.shopAddress}"></td>
+                        <td th:text="${c.shopOwnerName}"></td>
+                        <td th:text="${c.shopOwnerPhone}"></td>
+
+                        <td th:text="${c.changeReason}"></td>
+                        <td th:text="${c.handoverDate}"></td>
+                        <td th:text="${c.creationTime}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row"><label></label></div>
         <div class="row" id="footer_container"></div>
     </div>
 

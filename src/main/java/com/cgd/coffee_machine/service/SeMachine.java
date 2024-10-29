@@ -1,8 +1,10 @@
 package com.cgd.coffee_machine.service;
 
 import com.cgd.coffee_machine.CgdCoffeeMachineModule;
+import com.cgd.coffee_machine.model.ContractHistory;
 import com.cgd.coffee_machine.model.Machine;
 import com.cgd.coffee_machine.model.User;
+import com.cgd.coffee_machine.repository.ReContractHistory;
 import com.cgd.coffee_machine.repository.ReMachine;
 import com.cgd.coffee_machine.dto.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,12 +22,14 @@ import java.util.Objects;
 @Service
 public class SeMachine {
     private final ReMachine repository;
+    private final ReContractHistory reContractHistory;
     private final SeCommon seCommon;
     private final int pageSize = 10;
     private final Logger logger = CgdCoffeeMachineModule.LOGGER;
 
-    public SeMachine(ReMachine repository, SeCommon seCommon) {
+    public SeMachine(ReMachine repository, ReContractHistory reContractHistory, SeCommon seCommon) {
         this.repository = repository;
+        this.reContractHistory = reContractHistory;
         this.seCommon = seCommon;
     }
 
@@ -64,6 +68,10 @@ public class SeMachine {
     public Machine getOne(Long id){
         if(id == null) return new Machine();
         return repository.findById(id).orElse(null);
+    }
+
+    public ArrayList<ContractHistory> getContractHistoryOfMachine(Long machineId){
+        return (ArrayList<ContractHistory>) reContractHistory.getAllByMachineId(machineId,Sort.by(Sort.Direction.DESC,"id"));
     }
 
     public void saveMachine(Machine machine, HttpServletRequest request,int objectCount) throws Exception{

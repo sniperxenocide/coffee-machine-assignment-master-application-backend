@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface ReContractHistory extends JpaRepository<ContractHistory, Long>, JpaSpecificationExecutor<ContractHistory> {
     List<ContractHistory> getAllByShopId(Long shopId, Sort sort);
+    List<ContractHistory> getAllByMachineId(Long machineId, Sort sort);
 }

@@ -90,6 +90,8 @@ public class MachineController {
             model.addAttribute("msg","No Machine found with this ID: "+id);
             return "response";
         }
+        model.addAttribute("contractHistory",service.getContractHistoryOfMachine(machine.getId()));
+
         addAttrs(model,false,machine,null);
         return "machine-add-edit";
     }
