@@ -9,6 +9,7 @@ function getDistributorNameFromCode(element){
     function callback(response){
         try{
             let json = JSON.parse(response);
+            console.log(json);
             if(json['status'])
             {
                 document.getElementById('distributorName').value = json['data']['customerName'];

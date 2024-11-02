@@ -123,4 +123,13 @@ public class SeShop {
             logger.info(e.getMessage());
         }
     }
+
+    public OracleDistributor getOracleDistributorByCode(String code) throws Exception{
+        try {
+            return reOracleDistributor.findByOracleCode(code).orElse(null);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            throw e;
+        }
+    }
 }
