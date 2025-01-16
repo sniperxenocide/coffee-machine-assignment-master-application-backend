@@ -1,5 +1,6 @@
 package com.cgd.coffee_machine.model;
 
+import com.cgd.coffee_machine.dto.ContractDeleteDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -116,6 +117,9 @@ public class ContractHistory {
     @Column(name = "change_reason",length = 500)
     private String changeReason;
 
+    @Column(name = "comment",length = 1000)
+    private String comment;
+
     @ManyToOne
     @JoinColumn(name = "created_by",referencedColumnName = "id")
     private User createdBy;
@@ -124,7 +128,7 @@ public class ContractHistory {
     @Column(name = "creation_time",columnDefinition = "datetime default current_timestamp ")
     private LocalDateTime creationTime;
     
-    public ContractHistory(Contract previousContract,User user,String changeReason){
+    public ContractHistory(Contract previousContract, User user, ContractDeleteDto deleteDto){
         this.contractId = previousContract.getId();
 
         this.shopId = previousContract.getShop().getId();
@@ -145,7 +149,7 @@ public class ContractHistory {
         this.machineBrand = previousContract.getMachine().getMachineBrand().getName();
 
         this.createdBy = user;
-        this.changeReason = changeReason;
+        this.changeReason = deleteDto.getDeleteReason();
 
         this.machineAllotmentPrice = previousContract.getMachineAllotmentPrice();
         this.downPayment = previousContract.getDownPayment();
@@ -163,7 +167,8 @@ public class ContractHistory {
         this.paymentTerm = previousContract.getPaymentTerm().getName();
         this.contractCreatedBy = previousContract.getCreatedBy();
         this.contractCreationTime = previousContract.getCreationTime();
-//        this.contractEndTime = LocalDateTime.now();
+        this.contractEndTime = deleteDto.getWithdrawDate();
+        this.comment = deleteDto.getComment();
     }
 
 

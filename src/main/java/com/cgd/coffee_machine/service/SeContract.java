@@ -1,6 +1,7 @@
 package com.cgd.coffee_machine.service;
 
 import com.cgd.coffee_machine.CgdCoffeeMachineModule;
+import com.cgd.coffee_machine.dto.ContractDeleteDto;
 import com.cgd.coffee_machine.model.*;
 import com.cgd.coffee_machine.repository.ReContract;
 import com.cgd.coffee_machine.repository.ReContractHistory;
@@ -101,7 +102,9 @@ public class SeContract {
                     else machineNumber = contract.getMachine().getMachineNumber();
                 }
 
-                ContractHistory contractHistory = new ContractHistory(prvContract,user,changeReason);
+                ContractDeleteDto deleteDto = new ContractDeleteDto();
+                deleteDto.setDeleteReason(changeReason);
+                ContractHistory contractHistory = new ContractHistory(prvContract,user,deleteDto);
                 reContractHistory.save(contractHistory);
                 logger.info("Contract History Saved.History ID:  "+contractHistory.getId());
             }
@@ -115,11 +118,11 @@ public class SeContract {
         }
     }
 
-    public void deleteContract(HttpServletRequest request,Contract contract,String deleteReason) throws Exception{
+    public void deleteContract(HttpServletRequest request, Contract contract, ContractDeleteDto deleteDto) throws Exception{
         User user = seCommon.getUser(request);
         if(user == null) throw new Exception("Unauthorized Request");
         try {
-            ContractHistory contractHistory = new ContractHistory(contract,user,deleteReason);
+            ContractHistory contractHistory = new ContractHistory(contract,user,deleteDto);
             contractHistory = reContractHistory.save(contractHistory);
             logger.info("Contract History Saved.History ID:  "+contractHistory.getId());
             repository.delete(contract);

@@ -246,46 +246,66 @@
         <div style="text-align: center;">
             <h2>Delete Contract</h2>
         </div>
-        <div class="row" >
-            <div class="col-20"></div>
-            <div class="col-35">
-                <label><b>Reason of Deletion</b></label>
-                <select th:onchange="'onSelectDeleteReason(this.value,'+${contract.id}+')'">
-                    <option value="">-SELECT REASON-</option>
-                    <option value="CANCEL">Contract Cancelled</option>
-                    <option value="SHUTDOWN">Customer Closed his Business</option>
-                </select>
+        <form id="contract-delete-form" th:action="'/contract/delete?id='+${contract.id}"
+              method="post">
+            <div class="row" >
+                <div class="col-10"></div>
+                <div class="col-40">
+                    <label for="delete-reason"><b>Reason of Deletion</b></label>
+<!--                    th:onchange="'onSelectDeleteReason(this.value,'+${contract.id}+')'"-->
+                    <select id="delete-reason" th:field="*{contractDelete.deleteReason}">
+                        <option value="">-SELECT REASON-</option>
+                        <option value="Company Cancelled Contract">Company Cancelled Contract</option>
+                        <option value="Customer Closed his Business">Customer Closed his Business</option>
+                        <option value="Machine Stolen">Machine Stolen</option>
+                        <option value="Machine Damaged">Machine Damaged</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="col-10"></div>
+                <div class="col-30">
+                    <label for="withdraw-date" ><b>Withdraw Date</b></label>
+                    <input id="withdraw-date" th:field="*{contractDelete.withdrawDate}" type="date">
+                </div>
+                <div class="col-10"></div>
             </div>
-            <div class="col-5"></div>
-            <div class="col-20">
-                <label> </label>
-                <form id="contract-delete-form" th:action="'/contract/delete?id='+${contract.id}"
-                      method="post">
+            <div class="row">
+                <div class="col-10"></div>
+                <div class="col-80">
+                    <label for="contract-delete-comment"><b>Comment</b></label>
+                    <textarea id="contract-delete-comment" th:field="*{contractDelete.comment}"></textarea>
+                </div>
+                <div class="col-10"></div>
+            </div>
+            <label></label>
+            <div class="row">
+                <div class="col-40"></div>
+                <div class="col-20">
                     <button type="button" style="background-color: crimson" onclick="modalAction()" >
                         <b>Delete Contract</b>
                     </button>
-                    <div id="modal"  class="modal">
-                        <div class="modal-content" style="width: 50%">
-                            <div class="container">
-                                <div class="row"><span class="close">&times;</span></div>
-                                <div class="row" style="text-align: center;">
-                                    <h2>Do you want to Delete this Contract?</h2></div>
-                                <div class="row">
-                                    <div class="col-45"></div>
-                                    <div class="col-10">
-                                        <button type="submit" style="background-color: crimson" >
-                                            <b>YES</b>
-                                        </button>
-                                    </div>
-                                    <div class="col-45"></div>
-                                </div>
+                </div>
+                <div class="col-40"></div>
+            </div>
+            <div id="modal"  class="modal">
+                <div class="modal-content" style="width: 50%">
+                    <div class="container">
+                        <div class="row"><span class="close">&times;</span></div>
+                        <div class="row" style="text-align: center;">
+                            <h2>Do you want to Delete this Contract?</h2></div>
+                        <div class="row">
+                            <div class="col-45"></div>
+                            <div class="col-10">
+                                <button type="submit" style="background-color: crimson" >
+                                    <b>YES</b>
+                                </button>
                             </div>
+                            <div class="col-45"></div>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
-            <div class="col-20"></div>
-        </div>
+        </form>
         <div class="row"><label></label></div>
     </div>
 

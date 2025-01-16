@@ -1,5 +1,6 @@
 package com.cgd.coffee_machine.controller.web;
 
+import com.cgd.coffee_machine.dto.ContractDeleteDto;
 import com.cgd.coffee_machine.model.Contract;
 import com.cgd.coffee_machine.model.Machine;
 import com.cgd.coffee_machine.model.Shop;
@@ -90,14 +91,15 @@ public class ContractController {
     }
 
     @PostMapping("/contract/delete")
-    public String deleteContract(HttpServletRequest request,Model model,@RequestParam Long id,
-                                 @RequestParam(required = false) String deleteReason) {
+    public String deleteContract(HttpServletRequest request, Model model, @RequestParam Long id,
+                                 @ModelAttribute("contractDelete") ContractDeleteDto body) {
         Contract contract = null;Shop shop=null;Machine machine=null;
         try {
+            log.info("Body {}", body.toString());
             contract = service.getOne(id);
             if(contract==null) throw new Exception("Contract Doesn't Exist");
             shop=contract.getShop(); machine=contract.getMachine();
-            service.deleteContract(request,contract,deleteReason);
+            service.deleteContract(request,contract,body);
             model.addAttribute("msg","Contract ID: "+id+" Deleted.");
             model.addAttribute("redirect","/shop");
             return "response";
@@ -119,5 +121,6 @@ public class ContractController {
         model.addAttribute("availableMachines",service.getAvailableMachines()); //if(add)
         model.addAttribute("installment_types",service.getAllInstallmentType());
         model.addAttribute("payment_terms",service.getAllPaymentTerm());
+        model.addAttribute("contractDelete",new ContractDeleteDto());
     }
 }
