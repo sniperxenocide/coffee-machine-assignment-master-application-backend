@@ -3,137 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <title>Report</title>
+
+    <script src="/js/report.js"></script>
+
+    <link rel="stylesheet" href="/libs/web_pivot_table/bootstrap.min.css"/>
+    <script type="text/javascript" src="/libs/web_pivot_table/bootstrap.bundle.min.js" async></script>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.11.2/css/all.css} "/>
+    <script src="/libs/web_pivot_table/jquery.min.js"></script>
+
+    <script type="text/javascript" src="/libs/web_pivot_table/web-pivot-table.js"></script>
+
+    <script type="text/javascript" src="/libs/web_pivot_table/tableToExcel.js"></script>
+    <script type="text/javascript" src="/libs/web_pivot_table/jspdf.umd.min.js"></script>
+    <script type="text/javascript" src="/libs/web_pivot_table/jspdf.plugin.autotable.js"></script>
+
+    <script th:inline="javascript">
+        let reportData = [[${territoryWiseList}]];
+        let config = {
+            rows: ["division","region","territory"],
+            rowCaptions: ["Division","Region","Territory"],
+            columns: [],
+            columnCaptions: [],
+            measures: ["totalShop","totalMachine","totalUnassignedShop"],
+            measureCaptions: ["Total Shop","Total Machine","Total UnassignedShop"]
+        };
+    </script>
 </head>
 <body>
-<div class="container">
-    <div style="text-align: center;"><h2>Location Wise Vending Machine BIZ Scope Status</h2></div>
     <div class="row">
-        <div class="col-20">
-            <label> <b>Start</b></label>
-            <input id="start-date-2" type="date" th:value="${startDate}"> <!--th:value="${startDate}"-->
+        <div class="col-md-10"></div>
+        <div class="col-md-2">
+            <button class="btn mt-2 btn-danger" onclick="window.location.href=location.origin+'/report'">Back to Reports</button>
         </div>
-        <div class="col-5"></div>
-        <div class="col-20">
-            <label> <b>End</b></label>
-            <input id="end-date-2" type="date" th:value="${endDate}"> <!--th:value="${endDate}"-->
+    </div>
+    <div style="text-align: center;"><h2>Location Wise Vending Machine BIZ Scope Status</h2></div>
+    <div class="row ms-1">
+        <div class="col-md-3">
+            <div class="form-floating">
+                <input id="start-date" type="date" th:value="${startDate}" class="form-control">
+                <label for="start-date">Start</label>
+            </div>
         </div>
-        <div class="col-5"></div>
-        <div class="col-10"><label> </label>
-            <button onclick="openReportModal(2)"><b>OK</b></button>
+        <div class="col-md-3">
+            <div class="form-floating">
+                <input id="end-date" type="date" th:value="${endDate}" class="form-control">
+                <label for="end-date"> End</label>
+            </div>
         </div>
-        <div class="col-40"></div>
+        <div class="col-md-2"><label> </label>
+            <button class="btn mt-3 py-2 btn-dark" onclick="openReportModal(1)"><b>OK</b></button>
+        </div>
     </div>
     <div class="row"><label></label></div>
-    <div class="row">
-        <div class="col-25"><label><b>Division Wise</b></label></div>
-        <div class="col-55"></div>
-        <div class="col-20"><button onclick="exportToExcel('report-table-division-wise')">
-            Download</button></div>
-    </div>
-    <label></label>
-    <div class="row">
-        <div style="max-height:500px;overflow-y: auto">
-            <!--               class="sheetjs" -->
-            <table  id="report-table-division-wise" class='styled-table'>
-                <thead>
-                <tr>
-                    <th>SL</th><th>Division</th>
-                    <th>Total Shop</th>
-                    <th title="Number of Shops Where Coffee Machine Assigned">Assigned Shop</th>
-                    <th title="Number of Coffee Machine Assigned">Assigned Machines</th>
-                    <th title="Number of Shops Where Coffee Machine Not Assigned Yet">Unassigned Shop</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:if="${divisionWiseList.isEmpty()}" >Nothing Found</tr>
-                <tr th:each="line,stat:${divisionWiseList}">
-                    <td th:text="${stat.index+1}"></td>
-                    <td th:text="${line.division}"
-                        th:style="${line.division} eq 'TOTAL'?'font-weight: bold;text-align: center':''"></td>
-                    <td th:text="${line.totalShop}"></td>
-                    <td th:text="${line.totalShop}-${line.totalUnassignedShop}"></td>
-                    <td th:text="${line.totalMachine}"></td>
-                    <td th:text="${line.totalUnassignedShop}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <label></label>
-    <div class="row">
-        <div class="col-25"><label><b>Region Wise</b></label></div>
-        <div class="col-55"></div>
-        <div class="col-20"><button onclick="exportToExcel('report-table-region-wise')">
-            Download</button></div>
-    </div>
-    <label></label>
-    <div class="row">
-        <div style="max-height:500px;overflow-y: auto">
-            <!--               class="sheetjs" -->
-            <table  id="report-table-region-wise" class='styled-table'>
-                <thead>
-                <tr>
-                    <th>SL</th><th>Division</th>
-                    <th>Region</th><th>Total Shop</th>
-                    <th title="Number of Shops Where Coffee Machine Assigned">Assigned Shop</th>
-                    <th title="Number of Coffee Machine Assigned">Assigned Machines</th>
-                    <th title="Number of Shops Where Coffee Machine Not Assigned Yet">Unassigned Shop</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:if="${regionWiseList.isEmpty()}" >Nothing Found</tr>
-                <tr th:each="line,stat:${regionWiseList}">
-                    <td th:text="${stat.index+1}"></td>
-                    <td th:text="${line.division}"></td>
-                    <td th:text="${line.region}"></td>
-                    <td th:text="${line.totalShop}"></td>
-                    <td th:text="${line.totalShop}-${line.totalUnassignedShop}"></td>
-                    <td th:text="${line.totalMachine}"></td>
-                    <td th:text="${line.totalUnassignedShop}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <label></label>
-    <div class="row">
-        <div class="col-25"><label><b>Territory Wise</b></label></div>
-        <div class="col-55"></div>
-        <div class="col-20"><button onclick="exportToExcel('report-table-territory-wise')">
-            Download</button></div>
-    </div>
-    <label></label>
-    <div class="row">
-        <div style="max-height:500px;overflow-y: auto">
-            <!--               class="sheetjs" -->
-            <table  id="report-table-territory-wise" class='styled-table'>
-                <thead>
-                <tr>
-                    <th>SL</th><th>Division</th><th>Region</th><th>Territory</th>
-                    <th>Total Shop</th>
-                    <th title="Number of Shops Where Coffee Machine Assigned">Assigned Shop</th>
-                    <th title="Number of Coffee Machine Assigned">Assigned Machines</th>
-                    <th title="Number of Shops Where Coffee Machine Not Assigned Yet">Unassigned Shop</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:if="${territoryWiseList.isEmpty()}" >Nothing Found</tr>
-                <tr th:each="line,stat:${territoryWiseList}">
-                    <td th:text="${stat.index+1}"></td>
-                    <td th:text="${line.division}"></td>
-                    <td th:text="${line.region}"></td>
-                    <td th:text="${line.territory}"></td>
-                    <td th:text="${line.totalShop}"></td>
-                    <td th:text="${line.totalShop}-${line.totalUnassignedShop}"></td>
-                    <td th:text="${line.totalMachine}"></td>
-                    <td th:text="${line.totalUnassignedShop}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-
-</div>
+    <div class="row"><div id="table-container"></div></div>
+    <script>
+        let pivotTable = new WebPivotTable(reportData,config,'table-container',null);
+    </script>
 </body>
 </html>

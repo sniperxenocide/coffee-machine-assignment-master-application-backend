@@ -87,16 +87,16 @@ public class SeContract {
         User user = seCommon.getUser(request);
         if(user == null) throw new Exception("Unauthorized Request");
         try {
-            logger.info("Before Contract Update: "+contract);
+            logger.info("Before Contract Update: {}", contract);
             Contract prvContract = repository.findById(contract.getId()).orElse(null);
             if(prvContract == null) throw  new Exception("No Contract found");
             contract.setCreatedBy(prvContract.getCreatedBy());
             contract.setCreationTime(prvContract.getCreationTime());
             System.out.println(contract);
-            if(!Objects.equals(prvContract.getMachine().getId(), contract.getMachine().getId())){
+            if(prvContract.getMachine().getId().longValue() != contract.getMachine().getId()){
                 //Handle Machine Change and Save Change History
-                if(machineNumber==null || machineNumber.trim().length()==0){
-                    if(contract.getMachine().getMachineNumber()==null || contract.getMachine().getMachineNumber().trim().length()==0){
+                if(machineNumber==null || machineNumber.trim().isEmpty()){
+                    if(contract.getMachine().getMachineNumber()==null || contract.getMachine().getMachineNumber().trim().isEmpty()){
                         throw new Exception("Must Provide Machine Serial Number");
                     }
                     else machineNumber = contract.getMachine().getMachineNumber();
@@ -109,9 +109,11 @@ public class SeContract {
                 logger.info("Contract History Saved.History ID:  "+contractHistory.getId());
             }
             repository.save(contract);
-            contract.getMachine().setMachineNumber(machineNumber);
-            reMachine.save(contract.getMachine());
-            logger.info("Contract Updated: "+contract);
+            if(machineNumber!=null && !machineNumber.trim().isEmpty()){
+                contract.getMachine().setMachineNumber(machineNumber);
+                reMachine.save(contract.getMachine());
+            }
+            logger.info("Contract Updated: {}", contract);
         }catch (Exception e){
             e.printStackTrace();
             throw e;

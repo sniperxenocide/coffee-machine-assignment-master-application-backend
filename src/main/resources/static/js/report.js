@@ -8,7 +8,7 @@ let currentReport = [];
 let selectedTerritory = "";
 
 function openReportModal(val) {
-    let url = baseURL;
+    let url = location.origin;
     if(val==1) {
         let startDate='',endDate='';
         try {
@@ -45,15 +45,5 @@ function openReportModal(val) {
         selectedTerritory = "";
     }
 
-    callAPI(url,GET,null,reportCallback);
-    function reportCallback(response){
-        document.getElementById('report-modal-content').innerHTML = response;
-        modalAction();
-    }
-}
-
-function downloadReport() {
-    for(let i in currentReport){
-        exportToExcel(currentReport[i]);
-    }
+    window.location.href = url;
 }

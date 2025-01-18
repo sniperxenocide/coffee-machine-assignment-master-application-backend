@@ -3,41 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Report</title>
+    <script src="/js/report.js"></script>
+
+    <link rel="stylesheet" href="/libs/web_pivot_table/bootstrap.min.css"/>
+    <script type="text/javascript" src="/libs/web_pivot_table/bootstrap.bundle.min.js" async></script>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.11.2/css/all.css} "/>
+    <script src="/libs/web_pivot_table/jquery.min.js"></script>
+
+    <script type="text/javascript" src="/libs/web_pivot_table/web-pivot-table.js"></script>
+
+    <script type="text/javascript" src="/libs/web_pivot_table/tableToExcel.js"></script>
+    <script type="text/javascript" src="/libs/web_pivot_table/jspdf.umd.min.js"></script>
+    <script type="text/javascript" src="/libs/web_pivot_table/jspdf.plugin.autotable.js"></script>
+
+    <script th:inline="javascript">
+        let reportData = [[${summaryList}]];
+        let config = {
+            rows: ["shopType"],
+            rowCaptions: ["Shop Type"],
+            columns: [],
+            columnCaptions: [],
+            measures: ["totalShop","totalMachine","totalUnassignedShop"],
+            measureCaptions: ["Total Shop","Total Machine","Total UnassignedShop"]
+        };
+    </script>
 </head>
 <body>
-<div class="container">
-    <div style="text-align: center;"><h2>Type Wise Vending Machine BIZ Scope Status</h2></div>
-    <div class="row"><label></label></div>
+
     <div class="row">
-        <div style="max-height:500px;overflow-y: auto">
-            <!--               class="sheetjs" -->
-            <table  id="report-table-type-wise-shop" class='styled-table'>
-                <thead>
-                <tr>
-                    <th>SL</th><th>Shop Type</th>
-                    <th>Total Shop</th>
-                    <th title="Number of Shops Where Coffee Machine Assigned">Assigned Shop</th>
-                    <th title="Number of Coffee Machine Assigned">Assigned Machines</th>
-                    <th title="Number of Shops Where Coffee Machine Not Assigned Yet">Unassigned Shop</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:if="${summaryList.isEmpty()}" >Nothing Found</tr>
-                <tr th:each="line,stat:${summaryList}">
-                    <td th:text="${stat.index+1}"></td>
-                    <td th:text="${line.shopType}"
-                        th:style="${line.shopType} eq 'TOTAL'?'font-weight: bold;text-align: center':''"></td>
-                    <td th:text="${line.totalShop}"></td>
-                    <td th:text="${line.totalShop}-${line.totalUnassignedShop}"></td>
-                    <td th:text="${line.totalMachine}"></td>
-                    <td th:text="${line.totalUnassignedShop}"></td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="col-md-10"></div>
+        <div class="col-md-2">
+            <button class="btn mt-2 btn-danger" onclick="window.location.href=location.origin+'/report'">Back to Reports</button>
         </div>
     </div>
-
-
-</div>
+    <div style="text-align: center;"><h2>Type Wise Vending Machine BIZ Scope Status</h2></div>
+    <div class="row"><label></label></div>
+    <div class="row"><div id="table-container"></div></div>
+    <script>
+        let pivotTable = new WebPivotTable(reportData,config,'table-container',null);
+    </script>
 </body>
 </html>

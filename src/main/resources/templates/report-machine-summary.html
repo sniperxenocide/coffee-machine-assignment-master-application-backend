@@ -3,55 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <title>Report</title>
+    <script src="/js/report.js"></script>
+
+    <link rel="stylesheet" href="/libs/web_pivot_table/bootstrap.min.css"/>
+    <script type="text/javascript" src="/libs/web_pivot_table/bootstrap.bundle.min.js" async></script>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.11.2/css/all.css} "/>
+    <script src="/libs/web_pivot_table/jquery.min.js"></script>
+
+    <script type="text/javascript" src="/libs/web_pivot_table/web-pivot-table.js"></script>
+
+    <script type="text/javascript" src="/libs/web_pivot_table/tableToExcel.js"></script>
+    <script type="text/javascript" src="/libs/web_pivot_table/jspdf.umd.min.js"></script>
+    <script type="text/javascript" src="/libs/web_pivot_table/jspdf.plugin.autotable.js"></script>
+
+    <script th:inline="javascript">
+        let reportData = [[${summaryList}]];
+        let config = {
+            rows: ["country","brand","chamberOption"],
+            rowCaptions: ["Country","Brand","Chamber Option"],
+            columns: [],
+            columnCaptions: [],
+            measures: ["total","totalAssigned","totalUnassigned"],
+            measureCaptions: ["Total","Total Assigned","Total Unassigned"]
+        };
+    </script>
 </head>
 <body>
-    <div class="container">
-        <div style="text-align: center;"><h2>Machine Summary Report</h2></div>
         <div class="row">
-            <div class="col-15">
-                <label> <b>Start</b></label>
-                <input id="start-date" type="date" th:value="${startDate}">
+            <div class="col-md-10"></div>
+            <div class="col-md-2">
+                <button class="btn mt-2 btn-danger" onclick="window.location.href=location.origin+'/report'">Back to Reports</button>
             </div>
-            <div class="col-5"></div>
-            <div class="col-15">
-                <label> <b>End</b></label>
-                <input id="end-date" type="date" th:value="${endDate}" >
+        </div>
+        <div style="text-align: center;"><h2>Machine Summary Report</h2></div>
+        <div class="row ms-1">
+            <div class="col-md-3">
+                <div class="form-floating">
+                    <input id="start-date" type="date" th:value="${startDate}" class="form-control">
+                    <label for="start-date">Start</label>
+                </div>
             </div>
-            <div class="col-5"></div>
-            <div class="col-10"><label> </label>
-                <button onclick="openReportModal(1)"><b>OK</b></button>
+            <div class="col-md-3">
+                <div class="form-floating">
+                    <input id="end-date" type="date" th:value="${endDate}" class="form-control">
+                    <label for="end-date"> End</label>
+                </div>
             </div>
-            <div class="col-50"></div>
+            <div class="col-md-2"><label> </label>
+                <button class="btn mt-3 py-2 btn-dark" onclick="openReportModal(1)"><b>OK</b></button>
+            </div>
         </div>
         <div class="row"><label></label></div>
-        <div class="row">
-            <div style="max-height:500px;overflow-y: auto">
-<!--               class="sheetjs" -->
-                <table  id="report-table-machine-summary" class='styled-table'>
-                    <thead>
-                    <tr>
-                        <th>SL</th><th>Brand</th><th>Country</th><th>Chamber Option</th>
-                        <th>Total Machine</th><th>Total Assigned</th><th>Total Unassigned</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:if="${summaryList.isEmpty()}" >Nothing Found</tr>
-                        <tr th:each="line,stat:${summaryList}">
-                            <td th:text="${stat.index+1}"></td>
-                            <td th:text="${line.brand}"
-                                th:style="${line.brand} eq 'TOTAL'?'font-weight: bold;text-align: center':''"></td>
-                            <td th:text="${line.country}"></td>
-                            <td th:text="${line.chamberOption}"></td>
-                            <td th:text="${line.total}"></td>
-                            <td th:text="${line.totalAssigned}"></td>
-                            <td th:text="${line.totalUnassigned}"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <div class="row"><div id="table-container"></div></div>
+        <script>
+            let pivotTable = new WebPivotTable(reportData,config,'table-container',null);
+        </script>
 
-
-    </div>
 </body>
 </html>

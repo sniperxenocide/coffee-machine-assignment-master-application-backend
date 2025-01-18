@@ -126,7 +126,7 @@ function table_to_array(table_id) {
     return table_el_to_array(table_el);
 }
 
-function exportToExcel(tableId) {
+function exportTable(tableId) {
     let wb = XLSX.utils.book_new();
     let data = table_to_array(tableId);
     let ws = XLSX.utils.aoa_to_sheet(data);

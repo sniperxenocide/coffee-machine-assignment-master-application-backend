@@ -25,6 +25,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
     implementation 'org.flywaydb:flyway-core'
+    implementation 'org.webjars:font-awesome:5.11.2'
 }
 
 test {

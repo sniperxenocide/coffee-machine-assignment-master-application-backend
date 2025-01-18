@@ -3,9 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Report</title>
+
+    <link rel="stylesheet" type="text/css" href="/css/all.css"/>
+    <script type="text/javascript" src="/js/common.js" async></script>
+    <script type="text/javascript" src="/js/report.js" async></script>
+    <script type="text/javascript" src="/js/lib/FileSaver.js" async></script>
+    <script type="text/javascript" src="/js/lib/sheetjs.js" async></script>
+
+    <link rel="stylesheet" href="/css/jquery.sheetjs.css"/>
+    <script src="/js/lib/jquery.min.js" ></script>
+    <script src="/js/lib/jquery.sheetjs.js" ></script>
 </head>
 <body>
 <div class="container">
+    <div class="row">
+        <div class="col-15">
+            <button onclick="exportTable('report-table-location-wise-shop-detail')">Download</button>
+        </div>
+        <div class="col-60"></div>
+        <div class="col-15">
+            <button style="background: maroon"
+                    onclick="window.location.href=location.origin+'/report'">
+                Back to Reports</button>
+        </div>
+    </div>
     <div style="text-align: center;"><h2>Division Region Territory wise Shop Detail</h2></div>
     <div class="row"><label></label></div>
     <div class="row">

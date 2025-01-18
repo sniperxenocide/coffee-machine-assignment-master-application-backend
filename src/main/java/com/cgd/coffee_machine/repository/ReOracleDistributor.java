@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface ReOracleDistributor extends JpaRepository<OracleDistributor, Long>, JpaSpecificationExecutor<OracleDistributor> {
 
     @Query(value = "select distinct new com.cgd.coffee_machine.dto.MarketHierarchy(od.division,od.region,od.territory) " +
-            "from OracleDistributor as od ")
+            "from OracleDistributor as od order by od.division,od.region,od.territory")
     List<MarketHierarchy> getAllMarket();
 
     Optional<OracleDistributor> findByOracleCode(String oracleCode);

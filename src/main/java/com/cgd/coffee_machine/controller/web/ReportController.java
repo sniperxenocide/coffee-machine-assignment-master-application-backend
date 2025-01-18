@@ -36,8 +36,6 @@ public class ReportController {
             @RequestParam(required = false,defaultValue = "1970-01-01") String startDate,
             @RequestParam(required = false,defaultValue = "2100-12-31") String endDate){
         model.addAttribute("territoryWiseList",service.getTerritoryWiseShopSummary(startDate, endDate));
-        model.addAttribute("regionWiseList",service.getRegionWiseShopSummary(startDate, endDate));
-        model.addAttribute("divisionWiseList",service.getDivisionWiseShopSummary(startDate, endDate));
         model.addAttribute("startDate",startDate.startsWith("20")?startDate:"");
         model.addAttribute("endDate",endDate.startsWith("20")?endDate:"");
         return "report-shop-summary-location-wise";
