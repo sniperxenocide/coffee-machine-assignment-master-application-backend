@@ -44,12 +44,12 @@ public class SeReport {
         return (ArrayList<TypeWiseShopSummary>) reShop.getTypeWiseShopSummary();
     }
 
-    public ArrayList<Shop> getShopDetailList(String territory){
-        String ter = territory;
-        if (territory==null || territory.isEmpty()) return new ArrayList<>();
-        if(territory.equals("-")) ter="%";
-        log.info("Territory {}",ter);
-        return (ArrayList<Shop>) reShop.getAllShopByTerritory(ter);
+    public ArrayList<Shop> getShopDetailList(String division,String region,String territory){
+        log.info("Division {},Region {},Territory {}", division, region, territory);
+        if (division.equals("-")) division = "%";
+        if (region.equals("-") || region.isEmpty()) region = "%";
+        if (territory.equals("-") || territory.isEmpty()) territory = "%";
+        return (ArrayList<Shop>) reShop.getAllShopByTerritory(division,region,territory);
     }
 
     public ArrayList<MarketHierarchy> getMarketHierarchyList(){

@@ -58,9 +58,9 @@ public interface ReShop extends JpaRepository<Shop, Long>, JpaSpecificationExecu
     )
     List<TypeWiseShopSummary> getTypeWiseShopSummary();
 
-    @Query(value = " select * from shop where territory like ?1 " +
+    @Query(value = " select * from shop where division like ?1 and region like ?2 and territory like ?3 " +
             "order by division desc,region,territory,distributor_oracle_code,shop_type_id ",
     nativeQuery = true)
-    List<Shop> getAllShopByTerritory(String territory);
+    List<Shop> getAllShopByTerritory(String division,String region,String territory);
 
 }

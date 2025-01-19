@@ -6,15 +6,26 @@
 
     <link rel="stylesheet" type="text/css" href="/css/all.css"/>
     <script type="text/javascript" src="/js/common.js" async></script>
-    <script type="text/javascript" src="/js/report.js" async></script>
     <script type="text/javascript" src="/js/lib/FileSaver.js" async></script>
     <script type="text/javascript" src="/js/lib/sheetjs.js" async></script>
 
     <link rel="stylesheet" href="/css/jquery.sheetjs.css"/>
     <script src="/js/lib/jquery.min.js" ></script>
     <script src="/js/lib/jquery.sheetjs.js" ></script>
+
+    <script th:inline="javascript">
+        let mkt = [[${marketHierarchy}]];
+        let selectedDivision = [[${division}]];
+        let selectedRegion = [[${region}]];
+        let selectedTerritory = [[${territory}]];
+
+        let regFromServer = selectedRegion;
+        let terFromServer = selectedTerritory;
+
+        console.log(selectedDivision,' ',selectedRegion,' ',selectedTerritory);
+    </script>
 </head>
-<body>
+<body onload="loadDivisionSelect()">
 <div class="container">
     <div class="row">
         <div class="col-15">
@@ -30,19 +41,27 @@
     <div style="text-align: center;"><h2>Division Region Territory wise Shop Detail</h2></div>
     <div class="row"><label></label></div>
     <div class="row">
-        <div class="col-45">
-            <label><b>Select Territory</b></label>
-            <select onchange="selectedTerritory=this.value">
-                <option value="">-SELECT-</option>
-                <option value="-">ALL</option>
-                <option th:each="mk :${marketHierarchy}" th:value="${mk.territory}"
-                        th:text="${mk.division+'-'+mk.region+'-'+mk.territory}"></option>
+        <div class="col-20">
+            <label for="division-select"><b>Select Division</b></label>
+            <select id="division-select" onchange="loadRegionSelect(this.value)">
             </select>
         </div>
         <div class="col-5"><label></label></div>
-        <div class="col-15">
+        <div class="col-20">
+            <label for="region-select"><b>Select Region</b></label>
+            <select id="region-select" onchange="loadTerritorySelect(this.value)">
+            </select>
+        </div>
+        <div class="col-5"><label></label></div>
+        <div class="col-20">
+            <label for="territory-select"><b>Select Territory</b></label>
+            <select id="territory-select" onchange="selectedTerritory=this.value">
+            </select>
+        </div>
+        <div class="col-5"><label></label></div>
+        <div class="col-10">
             <label></label>
-            <button onclick="openReportModal(4)">Apply</button>
+            <button onclick="reloadLocationWiseDetailReport()">Apply</button>
         </div>
     </div>
     <label></label>
@@ -103,8 +122,67 @@
             </table>
         </div>
     </div>
-
-
 </div>
+
+<script>
+    function loadDivisionSelect() {
+        let divisions = ['','-'];
+        for(let i in mkt){
+            divisions.push(mkt[i]['division']);
+        }
+        divisions = [...new Set(divisions)];
+        loadSelectOptions('division-select',divisions,selectedDivision);
+        loadRegionSelect(selectedDivision);
+    }
+
+    function loadRegionSelect(division) {
+        selectedDivision = division;
+        selectedRegion = regFromServer.toString().length>0?regFromServer:'';
+        regFromServer='';
+        let regions = ['','-'];
+        for(let i in mkt){
+            if(mkt[i]['division']==selectedDivision) regions.push(mkt[i]['region']);
+        }
+        regions = [...new Set(regions)];
+        loadSelectOptions('region-select',regions,selectedRegion);
+        loadTerritorySelect(selectedRegion);
+    }
+
+    function loadTerritorySelect(region) {
+        selectedRegion = region;
+        selectedTerritory = terFromServer.toString().length>0?terFromServer:'';
+        terFromServer='';
+        let territories = ['','-'];
+        for(let i in mkt){
+            if(mkt[i]['region']==selectedRegion) territories.push(mkt[i]['territory']);
+        }
+        territories = [...new Set(territories)];
+        loadSelectOptions('territory-select',territories,selectedTerritory);
+    }
+
+    function loadSelectOptions(selectId,list,selectedVal) {
+        let select = document.getElementById(selectId);
+        select.innerHTML = '';
+        let optionStr = '';
+        list.forEach((item) => {
+            let text = '';
+            let selectedStr = selectedVal==item?'selected':'';
+            if(item=='') text = '-SELECT-';
+            else if(item=='-') text = 'ALL';
+            else text = item;
+            optionStr += "<option value='"+item+"' "+selectedStr+">"+text+"</option>";
+        });
+        select.innerHTML = optionStr;
+        console.log(selectId,' Selected Val ',selectedVal);
+    }
+
+    function reloadLocationWiseDetailReport() {
+        let url = location.origin+"/report/shop_machine_detail/location_wise";
+        url+= "?division=" +encodeURIComponent(selectedDivision)+
+            "&region=" +encodeURIComponent(selectedRegion)+
+            "&territory=" +encodeURIComponent(selectedTerritory);
+        window.location.href = url;
+    }
+</script>
 </body>
 </html>

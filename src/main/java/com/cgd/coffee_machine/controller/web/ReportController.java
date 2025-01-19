@@ -49,9 +49,14 @@ public class ReportController {
 
     @GetMapping("/report/shop_machine_detail/location_wise")
     public String locationWiseShopMachineDetailReport(Model model,
-                         @RequestParam(required = false) String territory){
-        model.addAttribute("shopList",service.getShopDetailList(territory));
+                         @RequestParam(required = false,defaultValue = "") String division,
+                         @RequestParam(required = false,defaultValue = "") String region,
+                         @RequestParam(required = false,defaultValue = "") String territory){
+        model.addAttribute("shopList",service.getShopDetailList(division,region,territory));
         model.addAttribute("marketHierarchy",service.getMarketHierarchyList());
+        model.addAttribute("division",division);
+        model.addAttribute("region",region);
+        model.addAttribute("territory",territory);
         return "report-shop-machine-detail-location-wise";
     }
 }
