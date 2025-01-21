@@ -156,8 +156,8 @@
                 <thead>
                     <tr>
                         <th>SL</th><th>Machine Number</th><th>Machine Model</th>
-                        <th>Machine Brand</th><th>Installation Date</th>
-                        <th>Change Reason</th><th>Withdrawn Date</th>
+                        <th>Machine Brand</th><th>Change Reason</th><th>Comment</th>
+                        <th>Handover Date</th><th>Withdrawn Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -166,9 +166,10 @@
                         <td th:text="${c.machineNumber}"></td>
                         <td th:text="${c.machineModel}"></td>
                         <td th:text="${c.machineBrand}"></td>
-                        <td th:text="${c.handoverDate}"></td>
                         <td th:text="${c.changeReason}"></td>
-                        <td th:text="${c.creationTime}"></td>
+                        <td th:text="${c.comment}"></td>
+                        <td th:text="${c.handoverDate}"></td>
+                        <td th:text="${c.contractEndTime}"></td>
                     </tr>
                 </tbody>
             </table>

@@ -146,8 +146,8 @@
                         <th>Territory</th><th>MSO</th><th>MSO Phone</th>
                         <th>Shop Name</th><th>Shop Code</th><th>Shop Address</th>
                         <th>Owner Name</th><th>Owner Phone</th>
-                        <th>Change Reason</th><th>Handover Date</th>
-                        <th>Withdrawn Date</th>
+                        <th>Change Reason</th><th>Comment</th>
+                        <th>Handover Date</th><th>Withdrawn Date</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -166,8 +166,9 @@
                         <td th:text="${c.shopOwnerPhone}"></td>
 
                         <td th:text="${c.changeReason}"></td>
+                        <td th:text="${c.comment}"></td>
                         <td th:text="${c.handoverDate}"></td>
-                        <td th:text="${c.creationTime}"></td>
+                        <td th:text="${c.contractEndTime}"></td>
                     </tr>
                     </tbody>
                 </table>
